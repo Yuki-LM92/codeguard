@@ -235,12 +235,36 @@
     "baseRisk": "low",
     "description": "Node.js用のライブラリ（パッケージ）の管理を行います。",
     "subcommands": {
-      "install": { "nameJa": "パッケージのインストール", "risk": "low", "description": "プロジェクトに必要なライブラリをインストールします" },
-      "uninstall": { "nameJa": "パッケージの削除", "risk": "low", "description": "インストール済みのライブラリを削除します" },
-      "run": { "nameJa": "スクリプトの実行", "risk": "medium", "description": "package.jsonに定義されたスクリプトを実行します。内容はプロジェクトにより異なります" },
-      "init": { "nameJa": "プロジェクトの初期化", "risk": "safe", "description": "新しいpackage.jsonファイルを作成します" },
-      "publish": { "nameJa": "パッケージの公開", "risk": "high", "description": "パッケージをnpmレジストリに公開します。社内コードの公開に注意" },
-      "audit": { "nameJa": "脆弱性チェック", "risk": "safe", "description": "インストール済みパッケージの脆弱性を確認します" }
+      "install": {
+        "nameJa": "パッケージのインストール",
+        "risk": "low",
+        "description": "プロジェクトに必要なライブラリをインストールします"
+      },
+      "uninstall": {
+        "nameJa": "パッケージの削除",
+        "risk": "low",
+        "description": "インストール済みのライブラリを削除します"
+      },
+      "run": {
+        "nameJa": "スクリプトの実行",
+        "risk": "medium",
+        "description": "package.jsonに定義されたスクリプトを実行します。内容はプロジェクトにより異なります"
+      },
+      "init": {
+        "nameJa": "プロジェクトの初期化",
+        "risk": "safe",
+        "description": "新しいpackage.jsonファイルを作成します"
+      },
+      "publish": {
+        "nameJa": "パッケージの公開",
+        "risk": "high",
+        "description": "パッケージをnpmレジストリに公開します。社内コードの公開に注意"
+      },
+      "audit": {
+        "nameJa": "脆弱性チェック",
+        "risk": "safe",
+        "description": "インストール済みパッケージの脆弱性を確認します"
+      }
     }
   },
   "npx": {
@@ -256,9 +280,21 @@
     "baseRisk": "low",
     "description": "npmの代替パッケージ管理ツールです。",
     "subcommands": {
-      "add": { "nameJa": "パッケージのインストール", "risk": "low", "description": "ライブラリをインストールします" },
-      "remove": { "nameJa": "パッケージの削除", "risk": "low", "description": "ライブラリを削除します" },
-      "run": { "nameJa": "スクリプトの実行", "risk": "medium", "description": "定義されたスクリプトを実行します" }
+      "add": {
+        "nameJa": "パッケージのインストール",
+        "risk": "low",
+        "description": "ライブラリをインストールします"
+      },
+      "remove": {
+        "nameJa": "パッケージの削除",
+        "risk": "low",
+        "description": "ライブラリを削除します"
+      },
+      "run": {
+        "nameJa": "スクリプトの実行",
+        "risk": "medium",
+        "description": "定義されたスクリプトを実行します"
+      }
     }
   },
   "pip": {
@@ -267,8 +303,16 @@
     "baseRisk": "low",
     "description": "Python用のライブラリの管理を行います。",
     "subcommands": {
-      "install": { "nameJa": "パッケージのインストール", "risk": "low", "description": "Pythonライブラリをインストールします" },
-      "uninstall": { "nameJa": "パッケージの削除", "risk": "low", "description": "Pythonライブラリを削除します" }
+      "install": {
+        "nameJa": "パッケージのインストール",
+        "risk": "low",
+        "description": "Pythonライブラリをインストールします"
+      },
+      "uninstall": {
+        "nameJa": "パッケージの削除",
+        "risk": "low",
+        "description": "Pythonライブラリを削除します"
+      }
     }
   },
   "git": {
@@ -277,21 +321,81 @@
     "baseRisk": "low",
     "description": "ソースコードの変更履歴を管理するツールです。",
     "subcommands": {
-      "status": { "nameJa": "変更状態の確認", "risk": "safe", "description": "変更されたファイルの一覧を表示します" },
-      "add": { "nameJa": "変更の記録準備", "risk": "safe", "description": "変更したファイルを記録対象に追加します" },
-      "commit": { "nameJa": "変更の記録", "risk": "low", "description": "変更内容をローカルに記録します。外部には影響しません" },
-      "push": { "nameJa": "変更の送信", "risk": "high", "description": "ローカルの記録をリモートサーバーに送信します。他のメンバーに影響します" },
-      "pull": { "nameJa": "最新の取得", "risk": "low", "description": "リモートサーバーから最新の変更を取得します" },
-      "clone": { "nameJa": "リポジトリの複製", "risk": "safe", "description": "リモートのプロジェクトをローカルにコピーします" },
-      "checkout": { "nameJa": "ブランチの切替", "risk": "low", "description": "作業するブランチ（開発の枝分かれ）を切り替えます" },
-      "branch": { "nameJa": "ブランチの管理", "risk": "low", "description": "ブランチの作成・一覧表示・削除を行います" },
-      "merge": { "nameJa": "ブランチの統合", "risk": "medium", "description": "別のブランチの変更を現在のブランチに取り込みます" },
-      "reset": { "nameJa": "変更の取り消し", "risk": "high", "description": "過去の状態に戻します。--hardオプションで変更が完全に失われます" },
-      "stash": { "nameJa": "変更の一時退避", "risk": "safe", "description": "作業中の変更を一時的に退避します" },
-      "log": { "nameJa": "履歴の表示", "risk": "safe", "description": "変更の履歴を表示します" },
-      "diff": { "nameJa": "差分の表示", "risk": "safe", "description": "変更内容の差分を表示します" },
-      "rebase": { "nameJa": "履歴の再構成", "risk": "high", "description": "コミット履歴を書き換えます。共有ブランチでの使用は危険です" },
-      "cherry-pick": { "nameJa": "特定の変更を取り込み", "risk": "medium", "description": "別ブランチの特定のコミットだけを取り込みます" }
+      "status": {
+        "nameJa": "変更状態の確認",
+        "risk": "safe",
+        "description": "変更されたファイルの一覧を表示します"
+      },
+      "add": {
+        "nameJa": "変更の記録準備",
+        "risk": "safe",
+        "description": "変更したファイルを記録対象に追加します"
+      },
+      "commit": {
+        "nameJa": "変更の記録",
+        "risk": "low",
+        "description": "変更内容をローカルに記録します。外部には影響しません"
+      },
+      "push": {
+        "nameJa": "変更の送信",
+        "risk": "high",
+        "description": "ローカルの記録をリモートサーバーに送信します。他のメンバーに影響します"
+      },
+      "pull": {
+        "nameJa": "最新の取得",
+        "risk": "low",
+        "description": "リモートサーバーから最新の変更を取得します"
+      },
+      "clone": {
+        "nameJa": "リポジトリの複製",
+        "risk": "safe",
+        "description": "リモートのプロジェクトをローカルにコピーします"
+      },
+      "checkout": {
+        "nameJa": "ブランチの切替",
+        "risk": "low",
+        "description": "作業するブランチ（開発の枝分かれ）を切り替えます"
+      },
+      "branch": {
+        "nameJa": "ブランチの管理",
+        "risk": "low",
+        "description": "ブランチの作成・一覧表示・削除を行います"
+      },
+      "merge": {
+        "nameJa": "ブランチの統合",
+        "risk": "medium",
+        "description": "別のブランチの変更を現在のブランチに取り込みます"
+      },
+      "reset": {
+        "nameJa": "変更の取り消し",
+        "risk": "high",
+        "description": "過去の状態に戻します。--hardオプションで変更が完全に失われます"
+      },
+      "stash": {
+        "nameJa": "変更の一時退避",
+        "risk": "safe",
+        "description": "作業中の変更を一時的に退避します"
+      },
+      "log": {
+        "nameJa": "履歴の表示",
+        "risk": "safe",
+        "description": "変更の履歴を表示します"
+      },
+      "diff": {
+        "nameJa": "差分の表示",
+        "risk": "safe",
+        "description": "変更内容の差分を表示します"
+      },
+      "rebase": {
+        "nameJa": "履歴の再構成",
+        "risk": "high",
+        "description": "コミット履歴を書き換えます。共有ブランチでの使用は危険です"
+      },
+      "cherry-pick": {
+        "nameJa": "特定の変更を取り込み",
+        "risk": "medium",
+        "description": "別ブランチの特定のコミットだけを取り込みます"
+      }
     }
   },
   "docker": {
@@ -300,12 +404,36 @@
     "baseRisk": "medium",
     "description": "アプリケーションの実行環境（コンテナ）を管理します。",
     "subcommands": {
-      "build": { "nameJa": "イメージの構築", "risk": "low", "description": "コンテナの設計図（イメージ）を作成します" },
-      "run": { "nameJa": "コンテナの起動", "risk": "medium", "description": "コンテナを起動します。ポート公開やボリュームマウントに注意" },
-      "stop": { "nameJa": "コンテナの停止", "risk": "safe", "description": "動作中のコンテナを停止します" },
-      "rm": { "nameJa": "コンテナの削除", "risk": "medium", "description": "停止済みのコンテナを削除します" },
-      "ps": { "nameJa": "コンテナ一覧の表示", "risk": "safe", "description": "動作中のコンテナ一覧を表示します" },
-      "exec": { "nameJa": "コンテナ内でコマンド実行", "risk": "medium", "description": "動作中のコンテナ内でコマンドを実行します" }
+      "build": {
+        "nameJa": "イメージの構築",
+        "risk": "low",
+        "description": "コンテナの設計図（イメージ）を作成します"
+      },
+      "run": {
+        "nameJa": "コンテナの起動",
+        "risk": "medium",
+        "description": "コンテナを起動します。ポート公開やボリュームマウントに注意"
+      },
+      "stop": {
+        "nameJa": "コンテナの停止",
+        "risk": "safe",
+        "description": "動作中のコンテナを停止します"
+      },
+      "rm": {
+        "nameJa": "コンテナの削除",
+        "risk": "medium",
+        "description": "停止済みのコンテナを削除します"
+      },
+      "ps": {
+        "nameJa": "コンテナ一覧の表示",
+        "risk": "safe",
+        "description": "動作中のコンテナ一覧を表示します"
+      },
+      "exec": {
+        "nameJa": "コンテナ内でコマンド実行",
+        "risk": "medium",
+        "description": "動作中のコンテナ内でコマンドを実行します"
+      }
     }
   },
   "sudo": {
@@ -449,8 +577,1007 @@
     "baseRisk": "medium",
     "description": "JavaScriptプログラムを実行します。実行内容はスクリプトにより異なります。",
     "commonOptions": {
-      "-e": "コマンドラインでJavaScriptコードを実行"
+      "-e": "コマンドラインでJavaScriptコードを実行（実行内容の確認が必須）"
     }
+  },
+  "bash": {
+    "nameJa": "Bashシェルスクリプトの実行",
+    "category": "runtime",
+    "baseRisk": "high",
+    "description": "Bashシェルでスクリプトやコマンドを実行します。-cオプションで任意のコードを直接実行できます。",
+    "commonOptions": {
+      "-c": "コマンド文字列を直接実行（内容の確認が必須）",
+      "-x": "実行したコマンドをデバッグ表示",
+      "-e": "エラー時に即座に終了",
+      "-n": "構文チェックのみ（実行しない）"
+    }
+  },
+  "sh": {
+    "nameJa": "シェルスクリプトの実行",
+    "category": "runtime",
+    "baseRisk": "high",
+    "description": "POSIXシェルでスクリプトを実行します。-cオプションで任意のコードを直接実行できます。",
+    "commonOptions": {
+      "-c": "コマンド文字列を直接実行（内容の確認が必須）",
+      "-x": "実行内容をトレース表示",
+      "-e": "エラー時に即座に終了"
+    }
+  },
+  "zsh": {
+    "nameJa": "Zshシェルスクリプトの実行",
+    "category": "runtime",
+    "baseRisk": "high",
+    "description": "Zshシェルでスクリプトを実行します。-cオプションで任意のコードを直接実行できます。",
+    "commonOptions": {
+      "-c": "コマンド文字列を直接実行（内容の確認が必須）"
+    }
+  },
+  "make": {
+    "nameJa": "ビルドシステム（Make）の実行",
+    "category": "build",
+    "baseRisk": "medium",
+    "description": "Makefileに定義されたビルドルールを実行します。内容はプロジェクトにより異なります。",
+    "commonOptions": {
+      "-f": "Makefileを指定",
+      "-j": "並列実行数を指定",
+      "-n": "実行せずにコマンドを表示（ドライラン）",
+      "-C": "ディレクトリを指定して実行"
+    }
+  },
+  "go": {
+    "nameJa": "Goプログラムの実行・ビルド",
+    "category": "runtime",
+    "baseRisk": "low",
+    "description": "Goプログラムのビルド・実行・テスト・パッケージ管理を行います。",
+    "subcommands": {
+      "run": {
+        "nameJa": "プログラムの実行",
+        "risk": "medium",
+        "description": "Goプログラムをコンパイルして実行します"
+      },
+      "build": {
+        "nameJa": "バイナリのビルド",
+        "risk": "low",
+        "description": "実行可能なバイナリファイルを生成します"
+      },
+      "test": {
+        "nameJa": "テストの実行",
+        "risk": "low",
+        "description": "パッケージのテストを実行します"
+      },
+      "install": {
+        "nameJa": "パッケージのインストール",
+        "risk": "low",
+        "description": "バイナリをGOPATH/binにインストールします"
+      },
+      "get": {
+        "nameJa": "依存パッケージの取得",
+        "risk": "low",
+        "description": "外部パッケージをダウンロードして追加します"
+      },
+      "mod": {
+        "nameJa": "モジュール管理",
+        "risk": "safe",
+        "description": "go.modファイルの管理を行います"
+      },
+      "generate": {
+        "nameJa": "コード生成",
+        "risk": "medium",
+        "description": "go:generateコメントに基づいてコードを生成します"
+      }
+    }
+  },
+  "cargo": {
+    "nameJa": "Rustパッケージ管理・ビルド（Cargo）",
+    "category": "build",
+    "baseRisk": "low",
+    "description": "Rustプロジェクトのビルド・テスト・パッケージ管理を行います。",
+    "subcommands": {
+      "run": {
+        "nameJa": "プログラムの実行",
+        "risk": "medium",
+        "description": "Rustプログラムをコンパイルして実行します"
+      },
+      "build": {
+        "nameJa": "バイナリのビルド",
+        "risk": "low",
+        "description": "Rustプログラムをコンパイルします"
+      },
+      "test": {
+        "nameJa": "テストの実行",
+        "risk": "low",
+        "description": "テストを実行します"
+      },
+      "publish": {
+        "nameJa": "クレートの公開",
+        "risk": "high",
+        "description": "crates.ioにパッケージを公開します。社内コードの公開に注意してください"
+      },
+      "clean": {
+        "nameJa": "ビルドキャッシュの削除",
+        "risk": "low",
+        "description": "target/ディレクトリを削除します。再ビルドで復元可能です"
+      },
+      "add": {
+        "nameJa": "依存関係の追加",
+        "risk": "low",
+        "description": "Cargo.tomlに依存関係を追加します"
+      }
+    }
+  },
+  "pnpm": {
+    "nameJa": "Node.jsパッケージ管理（pnpm）",
+    "category": "package",
+    "baseRisk": "low",
+    "description": "高速なNode.jsパッケージマネージャーです。npmの代替として広く使われます。",
+    "subcommands": {
+      "install": {
+        "nameJa": "パッケージのインストール",
+        "risk": "low",
+        "description": "依存パッケージをインストールします"
+      },
+      "add": {
+        "nameJa": "パッケージの追加",
+        "risk": "low",
+        "description": "新しいパッケージを追加します"
+      },
+      "remove": {
+        "nameJa": "パッケージの削除",
+        "risk": "low",
+        "description": "パッケージを削除します"
+      },
+      "run": {
+        "nameJa": "スクリプトの実行",
+        "risk": "medium",
+        "description": "package.jsonのスクリプトを実行します。内容はプロジェクトにより異なります"
+      },
+      "publish": {
+        "nameJa": "パッケージの公開",
+        "risk": "high",
+        "description": "パッケージをnpmレジストリに公開します。社内コードの公開に注意してください"
+      }
+    }
+  },
+  "bun": {
+    "nameJa": "JavaScript実行環境・パッケージ管理（Bun）",
+    "category": "runtime",
+    "baseRisk": "low",
+    "description": "高速なJavaScriptランタイム兼パッケージマネージャーです。",
+    "subcommands": {
+      "run": {
+        "nameJa": "スクリプトの実行",
+        "risk": "medium",
+        "description": "スクリプトを実行します"
+      },
+      "install": {
+        "nameJa": "パッケージのインストール",
+        "risk": "low",
+        "description": "依存パッケージをインストールします"
+      },
+      "add": {
+        "nameJa": "パッケージの追加",
+        "risk": "low",
+        "description": "新しいパッケージを追加します"
+      },
+      "publish": {
+        "nameJa": "パッケージの公開",
+        "risk": "high",
+        "description": "パッケージを公開します"
+      },
+      "x": {
+        "nameJa": "パッケージの一時実行",
+        "risk": "medium",
+        "description": "インストールせずにパッケージを実行します"
+      }
+    }
+  },
+  "deno": {
+    "nameJa": "Deno実行環境",
+    "category": "runtime",
+    "baseRisk": "medium",
+    "description": "セキュアなJavaScript/TypeScriptランタイムです。",
+    "subcommands": {
+      "run": {
+        "nameJa": "スクリプトの実行",
+        "risk": "medium",
+        "description": "JavaScriptまたはTypeScriptスクリプトを実行します"
+      },
+      "compile": {
+        "nameJa": "実行ファイルへのコンパイル",
+        "risk": "low",
+        "description": "スクリプトをスタンドアロンの実行ファイルにコンパイルします"
+      },
+      "install": {
+        "nameJa": "ツールのインストール",
+        "risk": "low",
+        "description": "スクリプトをシステムにインストールします"
+      },
+      "publish": {
+        "nameJa": "パッケージの公開",
+        "risk": "high",
+        "description": "パッケージをjsr.ioに公開します"
+      }
+    }
+  },
+  "gem": {
+    "nameJa": "Rubyパッケージ管理（RubyGems）",
+    "category": "package",
+    "baseRisk": "low",
+    "description": "Rubyのパッケージ（gem）の管理を行います。",
+    "subcommands": {
+      "install": {
+        "nameJa": "gemのインストール",
+        "risk": "low",
+        "description": "Rubyライブラリをインストールします"
+      },
+      "uninstall": {
+        "nameJa": "gemの削除",
+        "risk": "low",
+        "description": "インストール済みのgemを削除します"
+      },
+      "push": {
+        "nameJa": "gemの公開",
+        "risk": "high",
+        "description": "gemをRubyGemsに公開します"
+      }
+    }
+  },
+  "ruby": {
+    "nameJa": "Rubyスクリプトの実行",
+    "category": "runtime",
+    "baseRisk": "medium",
+    "description": "Rubyプログラムを実行します。実行内容はスクリプトにより異なります。",
+    "commonOptions": {
+      "-e": "コマンドラインでRubyコードを直接実行（内容の確認が必須）",
+      "-c": "構文チェックのみ（実行しない）"
+    }
+  },
+  "rsync": {
+    "nameJa": "ファイル同期・転送",
+    "category": "file",
+    "baseRisk": "medium",
+    "description": "ローカルまたはリモート間でファイルを効率的に同期・転送します。--deleteオプション使用時は送信元にないファイルが削除されます。",
+    "commonOptions": {
+      "-a": "アーカイブモード（権限・タイムスタンプを保持）",
+      "-v": "詳細な出力を表示",
+      "-r": "ディレクトリを再帰的に同期",
+      "-z": "転送中に圧縮",
+      "--delete": "送信元にないファイルを送信先から削除（危険：意図しないファイル削除に注意）",
+      "--dry-run": "実際には実行せず結果のみ表示（事前確認に使えます）",
+      "-n": "--dry-runと同じ",
+      "--exclude": "指定したパターンを除外"
+    }
+  },
+  "zip": {
+    "nameJa": "ZIPファイルの作成",
+    "category": "file",
+    "baseRisk": "safe",
+    "description": "ファイルやフォルダをZIP形式で圧縮します。",
+    "commonOptions": {
+      "-r": "ディレクトリを再帰的に圧縮",
+      "-d": "ZIPファイルから指定ファイルを削除",
+      "-e": "パスワード付き暗号化ZIPを作成",
+      "-9": "最高圧縮率で圧縮"
+    }
+  },
+  "gzip": {
+    "nameJa": "gzip圧縮",
+    "category": "file",
+    "baseRisk": "safe",
+    "description": "ファイルをgzip形式で圧縮します。デフォルトでは元ファイルが削除されます。",
+    "commonOptions": {
+      "-d": "圧縮ファイルを解凍",
+      "-k": "元のファイルを保持する",
+      "-9": "最高圧縮率"
+    }
+  },
+  "gunzip": {
+    "nameJa": "gzip解凍",
+    "category": "file",
+    "baseRisk": "safe",
+    "description": "gzip形式の圧縮ファイルを解凍します。",
+    "commonOptions": {
+      "-k": "元の.gzファイルを保持する"
+    }
+  },
+  "shred": {
+    "nameJa": "ファイルの安全な削除（復元不可）",
+    "category": "file",
+    "baseRisk": "high",
+    "description": "ファイルをランダムデータで上書きしてから削除します。通常のrmより確実に復元できなくなります。",
+    "commonOptions": {
+      "-u": "上書き後にファイルを削除",
+      "-n": "上書き回数を指定（デフォルト3回）",
+      "-z": "最後にゼロで上書き（削除の痕跡を隠す）",
+      "-v": "進捗を表示"
+    }
+  },
+  "dd": {
+    "nameJa": "ディスクデータの直接読み書き",
+    "category": "system",
+    "baseRisk": "critical",
+    "description": "ディスクやデバイスに直接データを読み書きします。/dev/へ書き込む場合はディスクを完全に消去・破壊できます。",
+    "commonOptions": {
+      "if=": "入力元（ファイルまたはデバイス）を指定",
+      "of=": "出力先を指定（/dev/で始まる場合は特に危険）",
+      "bs=": "ブロックサイズを指定",
+      "count=": "コピーするブロック数を指定",
+      "status=progress": "進捗をリアルタイム表示"
+    }
+  },
+  "pkill": {
+    "nameJa": "プロセス名での強制終了",
+    "category": "process",
+    "baseRisk": "high",
+    "description": "プロセス名やパターンに一致するすべてのプロセスを終了させます。",
+    "commonOptions": {
+      "-9": "強制終了（正常終了を待たない）",
+      "-f": "コマンドライン全体でマッチング（範囲が広がります）",
+      "-u": "特定ユーザーのプロセスのみ対象",
+      "-signal": "送信するシグナルを指定"
+    }
+  },
+  "killall": {
+    "nameJa": "同名プロセスの一括終了",
+    "category": "process",
+    "baseRisk": "high",
+    "description": "指定した名前のすべてのプロセスを一括で終了させます。",
+    "commonOptions": {
+      "-9": "強制終了",
+      "-v": "終了したプロセスを表示",
+      "-u": "特定ユーザーのプロセスのみ対象"
+    }
+  },
+  "crontab": {
+    "nameJa": "定期タスク（cron）の管理",
+    "category": "system",
+    "baseRisk": "medium",
+    "description": "定期的に自動実行されるタスクの設定を管理します。-rで全タスクが削除されます（元に戻せません）。",
+    "commonOptions": {
+      "-e": "タスクを編集（エディタが開く）",
+      "-l": "現在のタスク一覧を表示",
+      "-r": "すべてのタスクを削除（元に戻せません）"
+    }
+  },
+  "nc": {
+    "nameJa": "ネットワーク接続・通信（netcat）",
+    "category": "network",
+    "baseRisk": "high",
+    "description": "TCP/UDP接続を確立します。ポートの待ち受け、データ転送、シェルの外部公開にも使われます。",
+    "commonOptions": {
+      "-l": "サーバーとして待ち受け（外部からのポート接続を許可）",
+      "-p": "ポート番号を指定",
+      "-e": "接続時に指定プログラムを実行（シェルの外部公開に使われる危険なオプション）",
+      "-z": "ポートスキャンモード（接続確認のみ）",
+      "-v": "詳細出力"
+    }
+  },
+  "netcat": {
+    "nameJa": "ネットワーク接続・通信（netcat）",
+    "category": "network",
+    "baseRisk": "high",
+    "description": "ncと同じです。TCP/UDP接続を確立します。",
+    "commonOptions": {
+      "-l": "サーバーとして待ち受け",
+      "-p": "ポート番号を指定",
+      "-e": "接続時に指定プログラムを実行（危険）"
+    }
+  },
+  "openssl": {
+    "nameJa": "SSL/TLS暗号化ツール",
+    "category": "network",
+    "baseRisk": "medium",
+    "description": "SSL証明書の生成・管理、ファイルの暗号化・復号化を行います。",
+    "subcommands": {
+      "req": {
+        "nameJa": "証明書署名要求の生成",
+        "risk": "low",
+        "description": "SSL証明書の署名要求（CSR）を生成します"
+      },
+      "genrsa": {
+        "nameJa": "RSA秘密鍵の生成",
+        "risk": "low",
+        "description": "RSA秘密鍵を生成します"
+      },
+      "s_client": {
+        "nameJa": "SSL接続テスト",
+        "risk": "low",
+        "description": "サーバーへのSSL接続をテストします"
+      },
+      "enc": {
+        "nameJa": "ファイルの暗号化・復号化",
+        "risk": "medium",
+        "description": "ファイルを暗号化または復号化します"
+      },
+      "pkcs12": {
+        "nameJa": "PKCS#12証明書の操作",
+        "risk": "medium",
+        "description": "証明書の変換・エクスポートを行います"
+      }
+    }
+  },
+  "ping": {
+    "nameJa": "ネットワーク疎通確認",
+    "category": "network",
+    "baseRisk": "safe",
+    "description": "指定したホストへのネットワーク接続を確認します。",
+    "commonOptions": {
+      "-c": "送信回数を指定",
+      "-t": "タイムアウト時間を指定"
+    }
+  },
+  "dig": {
+    "nameJa": "DNS情報の照会",
+    "category": "network",
+    "baseRisk": "safe",
+    "description": "ドメイン名に関するDNS情報（IPアドレスなど）を照会します。",
+    "commonOptions": {}
+  },
+  "nslookup": {
+    "nameJa": "DNS逆引き・ドメイン照会",
+    "category": "network",
+    "baseRisk": "safe",
+    "description": "ドメイン名またはIPアドレスのDNS情報を表示します。",
+    "commonOptions": {}
+  },
+  "ifconfig": {
+    "nameJa": "ネットワーク設定の表示・変更",
+    "category": "network",
+    "baseRisk": "medium",
+    "description": "ネットワークインターフェースの設定を表示または変更します。",
+    "commonOptions": {}
+  },
+  "ip": {
+    "nameJa": "ネットワーク設定（iproute2）",
+    "category": "network",
+    "baseRisk": "medium",
+    "description": "Linuxのネットワーク設定（IPアドレス・ルーティング）を管理します。",
+    "subcommands": {
+      "addr": {
+        "nameJa": "IPアドレスの表示・設定",
+        "risk": "medium",
+        "description": "インターフェースのIPアドレスを管理します"
+      },
+      "route": {
+        "nameJa": "ルーティングテーブルの管理",
+        "risk": "high",
+        "description": "ネットワークルートを追加・削除します"
+      },
+      "link": {
+        "nameJa": "インターフェースの管理",
+        "risk": "medium",
+        "description": "インターフェースの有効化・無効化を行います"
+      }
+    }
+  },
+  "psql": {
+    "nameJa": "PostgreSQLクライアント",
+    "category": "database",
+    "baseRisk": "medium",
+    "description": "PostgreSQLデータベースに接続してクエリを実行します。データの参照・変更・削除が可能です。",
+    "commonOptions": {
+      "-h": "接続先ホストを指定",
+      "-U": "接続するユーザー名を指定",
+      "-d": "接続するデータベース名を指定",
+      "-c": "SQLコマンドを直接実行",
+      "-f": "SQLファイルを実行",
+      "-W": "パスワードを強制的に要求"
+    }
+  },
+  "mysql": {
+    "nameJa": "MySQLクライアント",
+    "category": "database",
+    "baseRisk": "medium",
+    "description": "MySQLデータベースに接続してクエリを実行します。",
+    "commonOptions": {
+      "-h": "接続先ホストを指定",
+      "-u": "ユーザー名を指定",
+      "-p": "パスワードを要求",
+      "-e": "SQLコマンドを直接実行",
+      "-D": "使用するデータベースを指定"
+    }
+  },
+  "mysqldump": {
+    "nameJa": "MySQLデータベースのバックアップ",
+    "category": "database",
+    "baseRisk": "medium",
+    "description": "MySQLデータベースの内容をSQLファイルとして出力します。全データが含まれます。",
+    "commonOptions": {
+      "-h": "接続先ホストを指定",
+      "-u": "ユーザー名を指定",
+      "-p": "パスワードを要求",
+      "--all-databases": "すべてのデータベースをダンプ"
+    }
+  },
+  "sqlite3": {
+    "nameJa": "SQLiteデータベースの操作",
+    "category": "database",
+    "baseRisk": "medium",
+    "description": "SQLiteデータベースに対してクエリを実行します。",
+    "commonOptions": {}
+  },
+  "redis-cli": {
+    "nameJa": "Redisクライアント",
+    "category": "database",
+    "baseRisk": "medium",
+    "description": "Redisサーバーに接続してコマンドを実行します。",
+    "subcommands": {
+      "flushall": {
+        "nameJa": "全データの削除（全DB）",
+        "risk": "critical",
+        "description": "Redisのすべてのデータを完全に削除します。元に戻せません"
+      },
+      "flushdb": {
+        "nameJa": "現在のDBの全データ削除",
+        "risk": "high",
+        "description": "現在選択中のデータベースのすべてのデータを削除します"
+      }
+    }
+  },
+  "aws": {
+    "nameJa": "AWSクラウド操作（AWS CLI）",
+    "category": "cloud",
+    "baseRisk": "medium",
+    "description": "Amazon Web Services（AWS）のリソースをコマンドラインから操作します。本番環境への影響に注意が必要です。",
+    "subcommands": {
+      "s3": {
+        "nameJa": "S3ストレージ操作",
+        "risk": "medium",
+        "description": "S3バケットへのアップロード・ダウンロード・削除を行います"
+      },
+      "ec2": {
+        "nameJa": "EC2インスタンス操作",
+        "risk": "high",
+        "description": "仮想サーバーの起動・停止・削除を行います"
+      },
+      "iam": {
+        "nameJa": "IAM権限管理",
+        "risk": "high",
+        "description": "ユーザー・ロール・権限を管理します。設定ミスはセキュリティリスクになります"
+      },
+      "cloudformation": {
+        "nameJa": "インフラ構成管理（CFn）",
+        "risk": "high",
+        "description": "インフラのデプロイ・削除を行います"
+      },
+      "lambda": {
+        "nameJa": "Lambda関数の管理",
+        "risk": "medium",
+        "description": "サーバーレス関数のデプロイ・設定を行います"
+      },
+      "rds": {
+        "nameJa": "RDSデータベース操作",
+        "risk": "high",
+        "description": "マネージドデータベースを管理します。データ削除に注意してください"
+      },
+      "sts": {
+        "nameJa": "一時的な認証情報の取得",
+        "risk": "medium",
+        "description": "一時的なアクセス認証情報を取得します"
+      }
+    }
+  },
+  "gcloud": {
+    "nameJa": "Google Cloudの操作（gcloud CLI）",
+    "category": "cloud",
+    "baseRisk": "medium",
+    "description": "Google Cloud Platform（GCP）のリソースをコマンドラインから管理します。",
+    "subcommands": {
+      "compute": {
+        "nameJa": "Compute Engineの操作",
+        "risk": "high",
+        "description": "仮想マシンの起動・停止・削除を行います"
+      },
+      "storage": {
+        "nameJa": "Cloud Storageの操作",
+        "risk": "medium",
+        "description": "ファイルのアップロード・ダウンロード・削除を行います"
+      },
+      "iam": {
+        "nameJa": "IAM権限の管理",
+        "risk": "high",
+        "description": "アクセス権限の設定を行います。設定ミスはセキュリティリスクになります"
+      },
+      "app": {
+        "nameJa": "App Engineのデプロイ",
+        "risk": "high",
+        "description": "アプリケーションをデプロイします"
+      },
+      "run": {
+        "nameJa": "Cloud Runのデプロイ",
+        "risk": "medium",
+        "description": "コンテナアプリケーションをデプロイします"
+      },
+      "sql": {
+        "nameJa": "Cloud SQLの管理",
+        "risk": "high",
+        "description": "マネージドデータベースを管理します"
+      }
+    }
+  },
+  "kubectl": {
+    "nameJa": "Kubernetes操作（kubectl）",
+    "category": "cloud",
+    "baseRisk": "high",
+    "description": "Kubernetesクラスターのリソースを管理します。本番クラスターへの操作は特に慎重に行う必要があります。",
+    "subcommands": {
+      "apply": {
+        "nameJa": "リソースの適用・更新",
+        "risk": "high",
+        "description": "YAMLファイルに基づいてリソースを作成または更新します"
+      },
+      "delete": {
+        "nameJa": "リソースの削除",
+        "risk": "critical",
+        "description": "Kubernetesリソースを削除します。Pod・Serviceなどが停止します"
+      },
+      "get": {
+        "nameJa": "リソース情報の取得",
+        "risk": "safe",
+        "description": "リソースの一覧と状態を表示します"
+      },
+      "describe": {
+        "nameJa": "リソースの詳細表示",
+        "risk": "safe",
+        "description": "リソースの詳細情報を表示します"
+      },
+      "logs": {
+        "nameJa": "ログの表示",
+        "risk": "safe",
+        "description": "PodのログをStreaming表示します"
+      },
+      "exec": {
+        "nameJa": "コンテナでのコマンド実行",
+        "risk": "high",
+        "description": "実行中のPodコンテナ内でコマンドを実行します"
+      },
+      "scale": {
+        "nameJa": "Pod数のスケーリング",
+        "risk": "high",
+        "description": "Podのレプリカ数を変更します"
+      },
+      "rollout": {
+        "nameJa": "デプロイのロールアウト管理",
+        "risk": "medium",
+        "description": "デプロイメントのロールアウト・ロールバックを行います"
+      },
+      "config": {
+        "nameJa": "接続設定の管理",
+        "risk": "medium",
+        "description": "クラスター接続設定（kubeconfig）を管理します"
+      }
+    }
+  },
+  "terraform": {
+    "nameJa": "インフラストラクチャ管理（Terraform）",
+    "category": "cloud",
+    "baseRisk": "high",
+    "description": "Infrastructure as Codeでクラウドリソースを管理します。誤操作で本番環境が破壊される可能性があります。",
+    "subcommands": {
+      "plan": {
+        "nameJa": "変更内容の確認（ドライラン）",
+        "risk": "safe",
+        "description": "実際には変更せずに、適用される変更の一覧を表示します"
+      },
+      "apply": {
+        "nameJa": "インフラへの変更適用",
+        "risk": "critical",
+        "description": "実際にインフラを作成・変更します。本番環境に直接影響します"
+      },
+      "destroy": {
+        "nameJa": "インフラの全削除",
+        "risk": "critical",
+        "description": "管理しているすべてのリソースを削除します。元に戻せません"
+      },
+      "init": {
+        "nameJa": "初期化",
+        "risk": "safe",
+        "description": "プロバイダーのダウンロードと初期化を行います"
+      },
+      "validate": {
+        "nameJa": "設定ファイルの検証",
+        "risk": "safe",
+        "description": "Terraform設定ファイルの構文を検証します"
+      },
+      "import": {
+        "nameJa": "既存リソースのインポート",
+        "risk": "medium",
+        "description": "既存のクラウドリソースをTerraformの管理対象にします"
+      },
+      "state": {
+        "nameJa": "状態ファイルの直接操作",
+        "risk": "high",
+        "description": "Terraformの状態ファイルを直接操作します。誤操作に注意してください"
+      }
+    }
+  },
+  "docker-compose": {
+    "nameJa": "Docker Compose（マルチコンテナ管理）",
+    "category": "container",
+    "baseRisk": "medium",
+    "description": "docker-compose.ymlに基づいて複数のDockerコンテナをまとめて管理します。",
+    "subcommands": {
+      "up": {
+        "nameJa": "サービスの起動",
+        "risk": "medium",
+        "description": "定義されたすべてのサービスを起動します"
+      },
+      "down": {
+        "nameJa": "サービスの停止・削除",
+        "risk": "medium",
+        "description": "コンテナを停止して削除します。-vオプションでボリュームも削除されます"
+      },
+      "build": {
+        "nameJa": "イメージのビルド",
+        "risk": "low",
+        "description": "サービスのDockerイメージをビルドします"
+      },
+      "pull": {
+        "nameJa": "イメージの取得",
+        "risk": "low",
+        "description": "最新のイメージをダウンロードします"
+      },
+      "logs": {
+        "nameJa": "ログの表示",
+        "risk": "safe",
+        "description": "サービスのログを表示します"
+      },
+      "exec": {
+        "nameJa": "コンテナでのコマンド実行",
+        "risk": "medium",
+        "description": "実行中のコンテナ内でコマンドを実行します"
+      }
+    }
+  },
+  "firebase": {
+    "nameJa": "Firebaseのデプロイ・管理",
+    "category": "cloud",
+    "baseRisk": "medium",
+    "description": "Google Firebaseプロジェクトのデプロイ・設定・管理を行います。",
+    "subcommands": {
+      "deploy": {
+        "nameJa": "本番環境へのデプロイ",
+        "risk": "high",
+        "description": "ホスティング・Functions・Firestoreルールなどを本番環境にデプロイします"
+      },
+      "serve": {
+        "nameJa": "ローカルサーバーの起動",
+        "risk": "safe",
+        "description": "ローカル環境でFirebaseをエミュレートします"
+      },
+      "login": {
+        "nameJa": "Googleアカウントでのログイン",
+        "risk": "low",
+        "description": "Firebaseの認証を行います"
+      },
+      "init": {
+        "nameJa": "プロジェクトの初期化",
+        "risk": "low",
+        "description": "Firebaseプロジェクトの初期設定を行います"
+      }
+    }
+  },
+  "vercel": {
+    "nameJa": "Vercelへのデプロイ",
+    "category": "cloud",
+    "baseRisk": "low",
+    "description": "Vercelプラットフォームへのデプロイ・管理を行います。",
+    "subcommands": {
+      "deploy": {
+        "nameJa": "デプロイ",
+        "risk": "medium",
+        "description": "プロジェクトをVercelにデプロイします"
+      },
+      "dev": {
+        "nameJa": "ローカル開発サーバーの起動",
+        "risk": "safe",
+        "description": "ローカル環境でVercelをエミュレートします"
+      },
+      "env": {
+        "nameJa": "環境変数の管理",
+        "risk": "medium",
+        "description": "Vercelの環境変数を管理します"
+      }
+    }
+  },
+  "supabase": {
+    "nameJa": "Supabaseの管理",
+    "category": "cloud",
+    "baseRisk": "medium",
+    "description": "Supabaseプロジェクトのデータベース・認証・ストレージを管理します。",
+    "subcommands": {
+      "db": {
+        "nameJa": "データベース操作",
+        "risk": "high",
+        "description": "マイグレーション実行・リセットなどデータベースを操作します"
+      },
+      "functions": {
+        "nameJa": "Edge Functionsの管理",
+        "risk": "medium",
+        "description": "Edge Functionsのデプロイ・削除を行います"
+      },
+      "start": {
+        "nameJa": "ローカル環境の起動",
+        "risk": "safe",
+        "description": "ローカルSupabaseを起動します"
+      },
+      "stop": {
+        "nameJa": "ローカル環境の停止",
+        "risk": "safe",
+        "description": "ローカルSupabaseを停止します"
+      },
+      "migration": {
+        "nameJa": "マイグレーション管理",
+        "risk": "high",
+        "description": "データベースマイグレーションを作成・適用します"
+      }
+    }
+  },
+  "open": {
+    "nameJa": "ファイル・URLを開く（macOS）",
+    "category": "system",
+    "baseRisk": "low",
+    "description": "macOSでファイルやURLをデフォルトのアプリケーションで開きます。URLを開く場合はフィッシングサイトへの誘導に注意してください。",
+    "commonOptions": {
+      "-a": "使用するアプリケーションを指定",
+      "-n": "新しいアプリケーションインスタンスで開く",
+      "-R": "Finderでファイルの場所を表示"
+    }
+  },
+  "defaults": {
+    "nameJa": "macOSシステム設定の変更",
+    "category": "system",
+    "baseRisk": "medium",
+    "description": "macOSのシステム設定・アプリの設定をコマンドラインから変更します。",
+    "subcommands": {
+      "write": {
+        "nameJa": "設定の書き込み",
+        "risk": "medium",
+        "description": "設定値を変更します。システムの動作が変わる場合があります"
+      },
+      "read": {
+        "nameJa": "設定の読み取り",
+        "risk": "safe",
+        "description": "現在の設定値を表示します"
+      },
+      "delete": {
+        "nameJa": "設定の削除",
+        "risk": "high",
+        "description": "設定値を削除します。アプリやシステムの動作に影響する場合があります"
+      }
+    }
+  },
+  "osascript": {
+    "nameJa": "AppleScript / JavaScriptの実行（macOS）",
+    "category": "system",
+    "baseRisk": "critical",
+    "description": "macOS上でAppleScriptまたはJavaScript for Automationを実行します。ファイルアクセス・アプリ操作・システム設定変更など広範な操作が可能です。",
+    "commonOptions": {
+      "-e": "スクリプトを直接実行（内容の確認が必須）",
+      "-l": "スクリプト言語を指定"
+    }
+  },
+  "pbcopy": {
+    "nameJa": "クリップボードへのコピー（macOS）",
+    "category": "system",
+    "baseRisk": "safe",
+    "description": "標準入力の内容をmacOSのクリップボードにコピーします。",
+    "commonOptions": {}
+  },
+  "pbpaste": {
+    "nameJa": "クリップボードの内容を出力（macOS）",
+    "category": "system",
+    "baseRisk": "safe",
+    "description": "macOSのクリップボードの内容を標準出力に出力します。",
+    "commonOptions": {}
+  },
+  "security": {
+    "nameJa": "macOSキーチェーン・証明書管理",
+    "category": "system",
+    "baseRisk": "high",
+    "description": "macOSのキーチェーン（パスワード・証明書の保管庫）にアクセス・管理します。",
+    "subcommands": {
+      "find-generic-password": {
+        "nameJa": "パスワードの検索・取得",
+        "risk": "high",
+        "description": "キーチェーンからパスワードを検索・取得します"
+      },
+      "add-generic-password": {
+        "nameJa": "パスワードの追加",
+        "risk": "medium",
+        "description": "キーチェーンにパスワードを追加します"
+      },
+      "delete-generic-password": {
+        "nameJa": "パスワードの削除",
+        "risk": "high",
+        "description": "キーチェーンからパスワードを削除します"
+      },
+      "export": {
+        "nameJa": "証明書・秘密鍵のエクスポート",
+        "risk": "high",
+        "description": "証明書・秘密鍵をファイルに書き出します"
+      }
+    }
+  },
+  "jq": {
+    "nameJa": "JSONデータの処理・抽出",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "JSONデータをフィルタリング・整形・抽出します。データを変更しません。",
+    "commonOptions": {
+      "-r": "結果をクォートなしで出力",
+      "-c": "コンパクト形式で出力（1行）",
+      "-e": "マッチしない場合に終了コード1を返す",
+      "-s": "全入力をひとつの配列として処理"
+    }
+  },
+  "diff": {
+    "nameJa": "ファイルの差分表示",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "2つのファイルまたはディレクトリの違いを表示します。ファイルを変更しません。",
+    "commonOptions": {
+      "-u": "unified形式（前後の文脈付き）で表示",
+      "-r": "ディレクトリを再帰的に比較",
+      "-i": "大文字小文字を区別しない"
+    }
+  },
+  "patch": {
+    "nameJa": "パッチの適用",
+    "category": "edit",
+    "baseRisk": "medium",
+    "description": "diffファイルに基づいてソースコードに変更を適用します。",
+    "commonOptions": {
+      "-p": "パスの先頭から削除するコンポーネント数を指定",
+      "-R": "パッチを逆適用（元に戻す）",
+      "--dry-run": "実際には適用せずに結果だけ確認"
+    }
+  },
+  "base64": {
+    "nameJa": "Base64エンコード・デコード",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "データをBase64形式にエンコード、またはBase64からデコードします。データ転送・難読化に使われます。",
+    "commonOptions": {
+      "-d": "デコード（Base64から元のデータに変換）",
+      "-i": "デコード時に空白文字を無視",
+      "-w": "出力の折り返し文字数を指定"
+    }
+  },
+  "tr": {
+    "nameJa": "文字の変換・削除",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "文字を別の文字に変換、または削除します。パイプと組み合わせて使います。",
+    "commonOptions": {
+      "-d": "指定した文字を削除",
+      "-s": "連続する同じ文字を1つにまとめる"
+    }
+  },
+  "vi": {
+    "nameJa": "テキストエディタ（vi）",
+    "category": "edit",
+    "baseRisk": "medium",
+    "description": "テキストファイルをviエディタで編集します。保存するとファイルの内容が変更されます。",
+    "commonOptions": {}
+  },
+  "vim": {
+    "nameJa": "テキストエディタ（Vim）",
+    "category": "edit",
+    "baseRisk": "medium",
+    "description": "テキストファイルをVimエディタで編集します。保存するとファイルの内容が変更されます。",
+    "commonOptions": {
+      "-c": "起動時にVimコマンドを実行",
+      "-n": "swapファイルなしで開く",
+      "--headless": "GUIなしで実行（スクリプト用）"
+    }
+  },
+  "nano": {
+    "nameJa": "テキストエディタ（nano）",
+    "category": "edit",
+    "baseRisk": "medium",
+    "description": "シンプルなテキストエディタです。Ctrl+Oで保存するとファイルが変更されます。",
+    "commonOptions": {}
   },
   "gh": {
     "nameJa": "GitHub操作（GitHub CLI）",
@@ -458,20 +1585,76 @@
     "baseRisk": "medium",
     "description": "GitHubのリポジトリ・PR・Issue・Releaseなどをコマンドラインから操作します。外部サービス（GitHub.com）に変更が反映されます。",
     "subcommands": {
-      "repo create": { "nameJa": "リポジトリの作成", "risk": "high", "description": "GitHubにリポジトリを新規作成します。公開（public）設定の場合、誰でもアクセス可能になります" },
-      "repo delete": { "nameJa": "リポジトリの削除", "risk": "critical", "description": "GitHubのリポジトリを完全に削除します。元に戻せません" },
-      "repo clone": { "nameJa": "リポジトリの複製", "risk": "safe", "description": "GitHubのリポジトリをローカルにコピーします" },
-      "repo fork": { "nameJa": "リポジトリのフォーク", "risk": "low", "description": "他のユーザーのリポジトリを自分のアカウントにコピーします" },
-      "pr create": { "nameJa": "プルリクエストの作成", "risk": "medium", "description": "変更をメインブランチに取り込む申請（PR）をGitHubに送信します" },
-      "pr merge": { "nameJa": "プルリクエストのマージ", "risk": "high", "description": "PRをメインブランチに統合します。チームの共有コードに影響します" },
-      "pr close": { "nameJa": "プルリクエストのクローズ", "risk": "medium", "description": "プルリクエストを閉じます（マージせずに却下）" },
-      "issue create": { "nameJa": "Issueの作成", "risk": "low", "description": "GitHubにIssue（課題・報告）を作成します" },
-      "issue close": { "nameJa": "Issueのクローズ", "risk": "low", "description": "Issueを解決済みとして閉じます" },
-      "release create": { "nameJa": "リリースの公開", "risk": "high", "description": "GitHubにリリース（バージョン公開）を作成します。外部に公開されます" },
-      "workflow run": { "nameJa": "ワークフロー（CI/CD）の手動実行", "risk": "high", "description": "GitHub Actionsのワークフローを手動で起動します。デプロイなど重要な処理が実行される場合があります" },
-      "auth login": { "nameJa": "GitHubへのログイン", "risk": "medium", "description": "GitHub CLIでGitHubアカウントにログインします" },
-      "auth logout": { "nameJa": "GitHubからのログアウト", "risk": "medium", "description": "GitHub CLIのアカウント認証を解除します" },
-      "secret set": { "nameJa": "シークレット（機密情報）の設定", "risk": "high", "description": "GitHubリポジトリにシークレット（APIキー等）を登録します。登録内容はCIで参照されます" }
+      "repo create": {
+        "nameJa": "リポジトリの作成",
+        "risk": "high",
+        "description": "GitHubにリポジトリを新規作成します。公開（public）設定の場合、誰でもアクセス可能になります"
+      },
+      "repo delete": {
+        "nameJa": "リポジトリの削除",
+        "risk": "critical",
+        "description": "GitHubのリポジトリを完全に削除します。元に戻せません"
+      },
+      "repo clone": {
+        "nameJa": "リポジトリの複製",
+        "risk": "safe",
+        "description": "GitHubのリポジトリをローカルにコピーします"
+      },
+      "repo fork": {
+        "nameJa": "リポジトリのフォーク",
+        "risk": "low",
+        "description": "他のユーザーのリポジトリを自分のアカウントにコピーします"
+      },
+      "pr create": {
+        "nameJa": "プルリクエストの作成",
+        "risk": "medium",
+        "description": "変更をメインブランチに取り込む申請（PR）をGitHubに送信します"
+      },
+      "pr merge": {
+        "nameJa": "プルリクエストのマージ",
+        "risk": "high",
+        "description": "PRをメインブランチに統合します。チームの共有コードに影響します"
+      },
+      "pr close": {
+        "nameJa": "プルリクエストのクローズ",
+        "risk": "medium",
+        "description": "プルリクエストを閉じます（マージせずに却下）"
+      },
+      "issue create": {
+        "nameJa": "Issueの作成",
+        "risk": "low",
+        "description": "GitHubにIssue（課題・報告）を作成します"
+      },
+      "issue close": {
+        "nameJa": "Issueのクローズ",
+        "risk": "low",
+        "description": "Issueを解決済みとして閉じます"
+      },
+      "release create": {
+        "nameJa": "リリースの公開",
+        "risk": "high",
+        "description": "GitHubにリリース（バージョン公開）を作成します。外部に公開されます"
+      },
+      "workflow run": {
+        "nameJa": "ワークフロー（CI/CD）の手動実行",
+        "risk": "high",
+        "description": "GitHub Actionsのワークフローを手動で起動します。デプロイなど重要な処理が実行される場合があります"
+      },
+      "auth login": {
+        "nameJa": "GitHubへのログイン",
+        "risk": "medium",
+        "description": "GitHub CLIでGitHubアカウントにログインします"
+      },
+      "auth logout": {
+        "nameJa": "GitHubからのログアウト",
+        "risk": "medium",
+        "description": "GitHub CLIのアカウント認証を解除します"
+      },
+      "secret set": {
+        "nameJa": "シークレット（機密情報）の設定",
+        "risk": "high",
+        "description": "GitHubリポジトリにシークレット（APIキー等）を登録します。登録内容はCIで参照されます"
+      }
     }
   },
   "brew": {
@@ -480,11 +1663,31 @@
     "baseRisk": "low",
     "description": "macOS用パッケージマネージャーです。アプリやコマンドラインツールのインストール・管理を行います。",
     "subcommands": {
-      "install": { "nameJa": "パッケージのインストール", "risk": "low", "description": "アプリやツールをインストールします" },
-      "uninstall": { "nameJa": "パッケージの削除", "risk": "low", "description": "インストール済みのパッケージを削除します" },
-      "update": { "nameJa": "パッケージ情報の更新", "risk": "safe", "description": "利用可能なパッケージの最新情報を取得します" },
-      "upgrade": { "nameJa": "パッケージのアップグレード", "risk": "low", "description": "インストール済みパッケージを最新バージョンに更新します" },
-      "cleanup": { "nameJa": "古いバージョンの削除", "risk": "low", "description": "古いバージョンのパッケージを削除してディスクを節約します" }
+      "install": {
+        "nameJa": "パッケージのインストール",
+        "risk": "low",
+        "description": "アプリやツールをインストールします"
+      },
+      "uninstall": {
+        "nameJa": "パッケージの削除",
+        "risk": "low",
+        "description": "インストール済みのパッケージを削除します"
+      },
+      "update": {
+        "nameJa": "パッケージ情報の更新",
+        "risk": "safe",
+        "description": "利用可能なパッケージの最新情報を取得します"
+      },
+      "upgrade": {
+        "nameJa": "パッケージのアップグレード",
+        "risk": "low",
+        "description": "インストール済みパッケージを最新バージョンに更新します"
+      },
+      "cleanup": {
+        "nameJa": "古いバージョンの削除",
+        "risk": "low",
+        "description": "古いバージョンのパッケージを削除してディスクを節約します"
+      }
     }
   }
 }

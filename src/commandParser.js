@@ -91,6 +91,10 @@ function parseSingleCommand(cmd) {
   // 環境変数プレフィックスを分離
   const { command: withoutEnv, envVars } = extractEnvVars(withoutRedirect);
 
+  // コマンド置換の検出（$(...) またはバッククォート）
+  // 例: rm -rf $(cat list.txt) や rm -rf `cat list.txt`
+  const hasCommandSubstitution = /\$\(/.test(cmd) || /`[^`]+`/.test(cmd);
+
   // トークン分割
   const tokens = tokenize(withoutEnv);
 
@@ -107,7 +111,8 @@ function parseSingleCommand(cmd) {
       pipeTarget: pipes.length > 0 ? pipes[0] : null,
       hasRedirect: redirects.length > 0,
       redirectType: redirects.find(r => r.type === 'overwrite') ? 'overwrite'
-        : redirects.find(r => r.type === 'append') ? 'append' : null
+        : redirects.find(r => r.type === 'append') ? 'append' : null,
+      hasCommandSubstitution
     };
   }
 
@@ -154,7 +159,8 @@ function parseSingleCommand(cmd) {
     pipeTarget: pipes.length > 0 ? pipes[0] : null,
     hasRedirect: redirects.length > 0,
     redirectType: redirects.find(r => r.type === 'overwrite') ? 'overwrite'
-      : redirects.find(r => r.type === 'append') ? 'append' : null
+      : redirects.find(r => r.type === 'append') ? 'append' : null,
+    hasCommandSubstitution
   };
 }
 

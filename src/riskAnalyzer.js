@@ -109,7 +109,7 @@ function analyze(parsed, toolUse = null) {
     ? topPattern.reason
     : (cmdInfo ? buildJudgmentTip(baseCommand, subcommand, args, cmdInfo) : 'このコマンドはデータベースに登録されていません。内容を確認してから判断してください。');
 
-  return {
+  const baseResult = {
     raw: parsed.raw,
     riskLevel,
     commandInfo: {
@@ -134,6 +134,8 @@ function analyze(parsed, toolUse = null) {
     hasRedirect,
     redirectType
   };
+
+  return applyEdgeCasePolicies(parsed, baseResult);
 }
 
 /**
@@ -218,10 +220,11 @@ function matchPatterns(parsed) {
       if (!re.test(allArgs) && !re.test(fullArgs)) continue;
     }
 
-    // パイプターゲットチェック
+    // パイプターゲットチェック（全パイプステージを検索）
     if (m.pipeTarget) {
       const re = new RegExp(m.pipeTarget);
-      if (!parsed.pipeTarget || !re.test(parsed.pipeTarget)) continue;
+      const allPipes = parsed.pipes || [];
+      if (!allPipes.some(p => re.test(p))) continue;
     }
 
     // リダイレクトチェック
@@ -358,6 +361,86 @@ function buildFileRecommendationText(filePath, toolName, riskLevel) {
   }
   if (riskLevel === 'safe' || riskLevel === 'low') return '✅ 許可して問題ありません。';
   return '⚠️ ファイルの内容を確認してから判断してください。';
+}
+
+// インライン実行系コマンド
+const INLINE_EXEC_COMMANDS = new Set(['bash', 'sh', 'zsh', 'fish', 'dash', 'python', 'python3', 'ruby', 'node', 'perl', 'php']);
+// 破壊的操作コマンド（$VARが混入すると危険度上昇）
+const DESTRUCTIVE_COMMANDS = new Set(['rm', 'chmod', 'chown', 'dd', 'shred', 'mv']);
+// システムパスへの書き込みは常に critical
+const SYSTEM_WRITE_PATHS = ['/etc/', '/usr/', '/bin/', '/sbin/', '/sys/', '/proc/', '/boot/', '/lib/', '/dev/'];
+
+/**
+ * エッジケースを検出し、リスク・説明を補強する
+ *
+ * 対処するケース:
+ *   1. bash -c / python3 -c などインライン実行
+ *   2. $() コマンド置換
+ *   3. リダイレクト先がシステムパス
+ *   4. 破壊的コマンドに $VAR が含まれる
+ */
+function applyEdgeCasePolicies(parsed, result) {
+  const { baseCommand, options, args, subcommand, redirects, hasCommandSubstitution } = parsed;
+  let { riskLevel } = result;
+  const warnings = [];
+
+  // ── ケース1: インライン実行 (bash -c "..." / python3 -c "...") ──────────
+  if (INLINE_EXEC_COMMANDS.has(baseCommand) && (options.includes('-c') || options.includes('-e'))) {
+    const inlineCode = subcommand || args[0] || '';
+    riskLevel = elevateRisk(riskLevel, 1);
+
+    // インラインコード内に危険なキーワードがあればさらに1段階上げる
+    const DANGER_PATTERNS = [/rm\s+-r/, /shutil\.rmtree/, /os\.system/, /subprocess/, /exec\s*\(/, /eval\s*\(/, /chmod\s+777/, /dd\s+if=/, />\s*\/etc\//, />\s*\/usr\//];
+    if (inlineCode && DANGER_PATTERNS.some(p => p.test(inlineCode))) {
+      riskLevel = elevateRisk(riskLevel, 1);
+      warnings.push(`⚠️ インラインコードに危険な操作が含まれています: ${inlineCode.slice(0, 80)}`);
+    } else if (inlineCode) {
+      warnings.push(`📋 インライン実行コード: ${inlineCode.slice(0, 120)}`);
+    }
+  }
+
+  // ── ケース2: $() コマンド置換 ────────────────────────────────────────────
+  if (hasCommandSubstitution) {
+    riskLevel = elevateRisk(riskLevel, 1);
+    warnings.push('⚠️ コマンド置換 $(...) が含まれています。実行時に内部コマンドの結果が展開されます。');
+  }
+
+  // ── ケース3: リダイレクト先がシステムパス ─────────────────────────────
+  if (redirects && redirects.length > 0) {
+    const dangerousRedirect = redirects.find(r =>
+      r.type === 'overwrite' && r.target && SYSTEM_WRITE_PATHS.some(p => r.target.startsWith(p))
+    );
+    if (dangerousRedirect) {
+      riskLevel = 'critical';
+      warnings.push(`🚫 システムファイルへの上書きリダイレクトです: > ${dangerousRedirect.target}`);
+    }
+  }
+
+  // ── ケース4: 破壊的コマンドに $VAR が含まれる ──────────────────────────
+  if (DESTRUCTIVE_COMMANDS.has(baseCommand)) {
+    const allArgStr = [subcommand, ...args].filter(Boolean).join(' ');
+    if (/\$[A-Za-z_]/.test(allArgStr) && !hasCommandSubstitution) {
+      riskLevel = elevateRisk(riskLevel, 1);
+      warnings.push('⚠️ 変数展開が含まれています。実行時の変数の値によって影響範囲が変わります。');
+    }
+  }
+
+  if (warnings.length === 0) return { ...result, riskLevel };
+
+  // 警告をriskReasonに追記
+  const existingReason = result.contextAnalysis.riskReason || '';
+  const newReason = warnings.join(' / ') + (existingReason ? `\n${existingReason}` : '');
+
+  return {
+    ...result,
+    riskLevel,
+    contextAnalysis: {
+      ...result.contextAnalysis,
+      riskReason: newReason,
+      recommendation: deriveRecommendation(riskLevel),
+      recommendationText: deriveRecommendationText(riskLevel, baseCommand, subcommand)
+    }
+  };
 }
 
 /**

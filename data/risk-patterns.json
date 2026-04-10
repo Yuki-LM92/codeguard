@@ -111,6 +111,158 @@
       "reason": "特権モードでコンテナを起動しようとしています。ホストシステムへのフルアクセスが可能になります。",
       "recommendation": "deny",
       "recommendationText": "🚫 --privilegedはコンテナにホストの全権限を与えます。通常は不要です。"
+    },
+    {
+      "id": "wget-pipe-execute",
+      "match": { "command": "wget", "pipeTarget": "bash|sh|zsh|dash" },
+      "risk": "critical",
+      "reason": "インターネットからダウンロードしたスクリプトをそのまま実行しようとしています。内容を確認できないため非常に危険です。",
+      "recommendation": "deny",
+      "recommendationText": "🚫 リモートスクリプトの直接実行は、悪意のあるコードが実行される可能性があります。"
+    },
+    {
+      "id": "base64-decode-execute",
+      "match": { "command": "base64", "pipeTarget": "bash|sh|zsh" },
+      "risk": "critical",
+      "reason": "Base64でエンコードされたデータをデコードしてシェルで実行しようとしています。コマンドの内容を隠蔽するための難読化テクニックです。",
+      "recommendation": "deny",
+      "recommendationText": "🚫 Base64でエンコードされたスクリプトの実行は、悪意のあるコードの難読化によく使われます。"
+    },
+    {
+      "id": "rm-rf-all-glob",
+      "match": { "command": "rm", "optionsInclude": ["-r"], "argsMatch": "^\\*$" },
+      "risk": "critical",
+      "reason": "カレントディレクトリのすべてのファイルとフォルダを削除しようとしています。",
+      "recommendation": "deny",
+      "recommendationText": "🚫 「*」はカレントディレクトリの全ファイルを対象にします。意図した操作か必ず確認してください。"
+    },
+    {
+      "id": "rm-rf-cwd",
+      "match": { "command": "rm", "optionsInclude": ["-r"], "argsMatch": "^\\./?$" },
+      "risk": "high",
+      "reason": "カレントディレクトリ（.）全体を削除しようとしています。現在作業中のフォルダが丸ごと削除されます。",
+      "recommendation": "deny",
+      "recommendationText": "🚫 現在のフォルダ全体が削除されます。プロジェクトのソースコードも失われます。"
+    },
+    {
+      "id": "dd-device-write",
+      "match": { "command": "dd", "argsMatch": "of=/dev/" },
+      "risk": "critical",
+      "reason": "ディスクデバイスに直接データを書き込もうとしています。ディスクの内容が完全に上書き・破壊される可能性があります。",
+      "recommendation": "deny",
+      "recommendationText": "🚫 /dev/へのdd書き込みはディスクを破壊します。絶対に許可しないでください。"
+    },
+    {
+      "id": "crontab-remove-all",
+      "match": { "command": "crontab", "optionsInclude": ["-r"] },
+      "risk": "critical",
+      "reason": "登録されているすべての定期タスクを削除しようとしています。元に戻せません。",
+      "recommendation": "deny",
+      "recommendationText": "🚫 すべての定期タスクが失われます。crontab -l で内容を確認してから判断してください。"
+    },
+    {
+      "id": "git-clean-force",
+      "match": { "command": "git", "subcommand": "clean", "optionsInclude": ["-f"] },
+      "risk": "high",
+      "reason": "Gitで追跡されていないファイル（untracked files）を削除しようとしています。元に戻せません。",
+      "recommendation": "confirm",
+      "recommendationText": "⚠️ コミットされていない新規ファイルがすべて削除されます。-dオプション付きの場合はフォルダも削除されます。"
+    },
+    {
+      "id": "git-stash-drop",
+      "match": { "command": "git", "subcommand": "stash", "argsMatch": "^(drop|clear)$" },
+      "risk": "high",
+      "reason": "退避（stash）した作業内容を削除しようとしています。元に戻せません。",
+      "recommendation": "confirm",
+      "recommendationText": "⚠️ 退避した作業内容が削除されます。git stash listで内容を確認してから判断してください。"
+    },
+    {
+      "id": "git-push-force-with-lease",
+      "match": { "command": "git", "subcommand": "push", "optionsInclude": ["--force-with-lease"] },
+      "risk": "high",
+      "reason": "他のメンバーの変更がない場合に限定した強制プッシュです。--forceより安全ですが、リモートの履歴を書き換えます。",
+      "recommendation": "confirm",
+      "recommendationText": "⚠️ リモートブランチの履歴が書き換わります。チームで共有しているブランチへの使用は相談してください。"
+    },
+    {
+      "id": "docker-system-prune",
+      "match": { "command": "docker", "subcommand": "system", "argsMatch": "prune" },
+      "risk": "high",
+      "reason": "使用していないDockerリソース（コンテナ・イメージ・ネットワーク・ボリューム）をまとめて削除しようとしています。",
+      "recommendation": "confirm",
+      "recommendationText": "⚠️ 停止中のコンテナや未使用イメージが削除されます。再ダウンロード・再ビルドが必要になります。"
+    },
+    {
+      "id": "terraform-apply",
+      "match": { "command": "terraform", "subcommand": "apply" },
+      "risk": "critical",
+      "reason": "実際にクラウドインフラを作成・変更しようとしています。本番環境に直接影響します。",
+      "recommendation": "confirm",
+      "recommendationText": "⚠️ terraform planで変更内容を確認してから実行してください。本番環境への影響を事前に把握することが重要です。"
+    },
+    {
+      "id": "terraform-destroy",
+      "match": { "command": "terraform", "subcommand": "destroy" },
+      "risk": "critical",
+      "reason": "Terraformで管理しているすべてのクラウドリソースを削除しようとしています。本番環境が完全に失われる可能性があります。",
+      "recommendation": "deny",
+      "recommendationText": "🚫 本番環境の場合、すべてのサーバー・データベース・ネットワークが削除されます。絶対に確認してから実行してください。"
+    },
+    {
+      "id": "kubectl-delete",
+      "match": { "command": "kubectl", "subcommand": "delete" },
+      "risk": "critical",
+      "reason": "Kubernetesリソースを削除しようとしています。本番環境の場合はサービスが停止します。",
+      "recommendation": "confirm",
+      "recommendationText": "⚠️ 削除対象のリソース名と環境（本番/開発）を確認してください。--all オプションがある場合は特に注意が必要です。"
+    },
+    {
+      "id": "osascript-any",
+      "match": { "command": "osascript" },
+      "risk": "critical",
+      "reason": "AppleScriptを実行しようとしています。ファイル操作・アプリ制御・システム設定変更など広範な操作が可能です。",
+      "recommendation": "deny",
+      "recommendationText": "🚫 AppleScriptはmacOS上でほぼあらゆる操作が可能です。スクリプトの内容を必ず確認してください。"
+    },
+    {
+      "id": "nc-listen",
+      "match": { "command": "nc", "optionsInclude": ["-l"] },
+      "risk": "high",
+      "reason": "外部からの接続を受け入れるポートを開こうとしています。意図しない外部アクセスを許可する可能性があります。",
+      "recommendation": "confirm",
+      "recommendationText": "⚠️ 外部からのネットワーク接続を受け入れます。ポート番号と用途を確認してください。"
+    },
+    {
+      "id": "rsync-delete",
+      "match": { "command": "rsync", "optionsInclude": ["--delete"] },
+      "risk": "high",
+      "reason": "送信元に存在しないファイルを送信先から削除します。意図しないファイル削除が起きる可能性があります。",
+      "recommendation": "confirm",
+      "recommendationText": "⚠️ --deleteは送信先のファイルを自動的に削除します。--dry-runで事前確認することを推奨します。"
+    },
+    {
+      "id": "aws-s3-rm",
+      "match": { "command": "aws", "subcommand": "s3", "argsMatch": "\\brm\\b" },
+      "risk": "high",
+      "reason": "AWS S3バケット上のファイルを削除しようとしています。削除したオブジェクトは通常復元できません。",
+      "recommendation": "confirm",
+      "recommendationText": "⚠️ S3上のオブジェクトの削除は通常元に戻せません。バージョニングが有効なバケットでない限り復元不可です。"
+    },
+    {
+      "id": "redis-flushall",
+      "match": { "command": "redis-cli", "subcommand": "flushall" },
+      "risk": "critical",
+      "reason": "Redisのすべてのデータを削除しようとしています。全データベースのキャッシュ・セッション・データが失われます。",
+      "recommendation": "deny",
+      "recommendationText": "🚫 本番Redisの場合、セッション情報・キャッシュ・データがすべて失われます。絶対に確認してから実行してください。"
+    },
+    {
+      "id": "chmod-recursive-777",
+      "match": { "command": "chmod", "optionsInclude": ["-R"], "argsMatch": "777" },
+      "risk": "critical",
+      "reason": "すべてのファイルに対して全ユーザーへの完全な権限を再帰的に付与しようとしています。セキュリティリスクが極めて高いです。",
+      "recommendation": "deny",
+      "recommendationText": "🚫 -R 777は配下の全ファイルを誰でも読み書き実行できる状態にします。本番環境では絶対に使用しないでください。"
     }
   ]
 }
