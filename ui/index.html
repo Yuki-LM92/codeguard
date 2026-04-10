@@ -212,7 +212,7 @@
     .recommendation-box.deny    { background: #450a0a; color: #fca5a5; }
   }
 
-  /* 参考セクション（折りたたみ） */
+  /* 折りたたみ共通 */
   details { margin-top: 8px; }
   summary {
     font-size: 11px;
@@ -238,6 +238,62 @@
   @media (prefers-color-scheme: dark) {
     .example-safe  { color: #86efac; }
     .example-danger { color: #fca5a5; }
+  }
+
+  /* 判断ヒントトグル */
+  .hints-summary {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    padding: 6px 0;
+  }
+  .hints-summary::before { content: '▶'; font-size: 10px; }
+  details[open] .hints-summary::before { transform: rotate(90deg); }
+  .hints-body {
+    margin-top: 8px;
+    background: var(--bg-history);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .hints-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+  .hints-list { list-style: none; margin-bottom: 10px; }
+  .hints-list li {
+    padding: 3px 0 3px 20px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+  .hints-list li:last-child { border-bottom: none; }
+  .hints-list li::before {
+    content: '☑';
+    position: absolute;
+    left: 0;
+    color: var(--text-muted);
+    font-size: 11px;
+    top: 4px;
+  }
+  .hints-unsure {
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .hints-unsure.allow   { background: #dcfce7; color: #15803d; }
+  .hints-unsure.confirm { background: #fef9c3; color: #a16207; }
+  .hints-unsure.deny    { background: #fee2e2; color: #b91c1c; }
+  @media (prefers-color-scheme: dark) {
+    .hints-unsure.allow   { background: #14532d; color: #86efac; }
+    .hints-unsure.confirm { background: #422006; color: #fde047; }
+    .hints-unsure.deny    { background: #450a0a; color: #fca5a5; }
   }
 
   /* 手動入力エリア */
@@ -551,6 +607,28 @@ function buildCard(data, isNew) {
 
   const recommendationClass = ctx.recommendation || 'confirm';
 
+  // 判断ヒント
+  const hints = data.judgmentHints;
+  const hasHints = hints && (hints.checkpoints.length > 0 || hints.ifUnsure);
+  const hintsUnsureClass = ['critical', 'high'].includes(data.riskLevel) ? 'deny'
+    : data.riskLevel === 'medium' ? 'confirm' : 'allow';
+  const hintsAutoOpen = data.riskLevel === 'critical';
+  let hintsHtml = '';
+  if (hasHints) {
+    const checkpointsHtml = hints.checkpoints.length > 0
+      ? `<div class="hints-section-label">確認ポイント</div>
+         <ul class="hints-list">${hints.checkpoints.map(h => `<li>${esc(h)}</li>`).join('')}</ul>`
+      : '';
+    const unsureHtml = hints.ifUnsure
+      ? `<div class="hints-unsure ${hintsUnsureClass}">💬 ${esc(hints.ifUnsure)}</div>`
+      : '';
+    hintsHtml = `
+      <details${hintsAutoOpen ? ' open' : ''}>
+        <summary class="hints-summary">🤔 判断に迷ったときは</summary>
+        <div class="hints-body">${checkpointsHtml}${unsureHtml}</div>
+      </details>`;
+  }
+
   card.innerHTML = `
     <div class="card-header">
       <div class="risk-badge">
@@ -587,6 +665,7 @@ function buildCard(data, isNew) {
       <div class="section">
         <div class="recommendation-box ${recommendationClass}">${esc(ctx.recommendationText)}</div>
       </div>` : ''}
+      ${hintsHtml}
       ${examplesHtml}
     </div>
   `;

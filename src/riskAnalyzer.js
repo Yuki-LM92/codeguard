@@ -186,7 +186,8 @@ function buildFileOpResult(toolUse) {
     },
     safeExample: info.safeCase,
     dangerExample: info.dangerCase,
-    judgmentTip: info.judgmentTip
+    judgmentTip: info.judgmentTip,
+    judgmentHints: buildJudgmentHints(toolUse.name, null, [filePath], [], riskLevel)
   };
 }
 
@@ -363,6 +364,199 @@ function buildFileRecommendationText(filePath, toolName, riskLevel) {
   return '⚠️ ファイルの内容を確認してから判断してください。';
 }
 
+/**
+ * 非エンジニア向けの判断ヒントを生成する
+ * @param {string} baseCommand
+ * @param {string|null} subcommand
+ * @param {string[]} args
+ * @param {string[]} options
+ * @param {string} riskLevel
+ * @param {string[]} edgeWarnings - エッジケース検出で追加された警告
+ * @returns {{ checkpoints: string[], ifUnsure: string }}
+ */
+function buildJudgmentHints(baseCommand, subcommand, args, options, riskLevel, edgeWarnings = []) {
+  const checkpoints = [];
+  const allArgs = args.join(' ');
+
+  // ── ファイル削除 ───────────────────────────────────────
+  if (baseCommand === 'rm') {
+    if (/node_modules|\.next|dist\/|build\/|\.cache|\/tmp|\/temp/i.test(allArgs)) {
+      checkpoints.push('削除対象はビルドの一時ファイルやキャッシュです。通常は安全で、再実行で復元できます。');
+    } else {
+      checkpoints.push('削除するファイル・フォルダはGitで管理されていますか？Gitで管理されていれば削除後も復元できます。');
+      checkpoints.push('対象が dist/ build/ node_modules/ などの一時ファイルでない場合は、削除前に内容を確認してください。');
+    }
+  }
+
+  // ── Git ────────────────────────────────────────────────
+  if (baseCommand === 'git') {
+    if (subcommand === 'push') {
+      checkpoints.push('プッシュ先のブランチは main / master などチームで共有しているブランチですか？');
+      if (options.some(o => ['--force', '-f', '--force-with-lease'].includes(o))) {
+        checkpoints.push('強制プッシュは他のメンバーの作業履歴を書き換える可能性があります。チームに確認しましたか？');
+      }
+    }
+    if (subcommand === 'reset') {
+      checkpoints.push('まだコミット（保存）していない変更がある場合、すべて失われます。');
+      checkpoints.push('git stash コマンドで変更を一時退避してからリセットすることも検討してください。');
+    }
+    if (subcommand === 'clean') {
+      checkpoints.push('Gitで追跡されていない新しいファイルが削除されます。大切なファイルが混ざっていませんか？');
+    }
+    if (subcommand === 'stash') {
+      checkpoints.push('退避（stash）した作業内容を削除すると元に戻せません。git stash list で内容を確認してください。');
+    }
+  }
+
+  // ── npm / pnpm / bun スクリプト実行 ───────────────────
+  if (['npm', 'pnpm', 'bun', 'yarn'].includes(baseCommand) && subcommand === 'run') {
+    if (/deploy|release|publish|prod/i.test(allArgs)) {
+      checkpoints.push('本番環境へのデプロイ・リリース操作です。今実行してよいタイミングか確認してください。');
+    } else {
+      checkpoints.push('package.json の「scripts」セクションで、このスクリプト名の内容を確認できます。');
+      checkpoints.push('clean / purge / drop といったスクリプトはデータを削除する可能性があります。注意して確認してください。');
+    }
+  }
+
+  // ── ネットワーク取得 ───────────────────────────────────
+  if (['curl', 'wget'].includes(baseCommand)) {
+    checkpoints.push('アクセス先のURLは信頼できるサイトですか？見覚えのないURLへのアクセスは注意が必要です。');
+    checkpoints.push('コマンドの末尾に「| bash」「| sh」が付いている場合、ダウンロードした内容をそのまま実行します。特に慎重に確認してください。');
+  }
+
+  // ── シェル直接実行（bash -c など）──────────────────────
+  if (['bash', 'sh', 'zsh'].includes(baseCommand) && options.includes('-c')) {
+    checkpoints.push('実行しようとしているコマンドの内容を理解していますか？');
+    checkpoints.push('わからない場合は、Claude Codeに「このコマンドは何をしますか？日本語で説明してください」と聞いてみましょう。');
+  }
+
+  // ── Python / Node インライン実行 ──────────────────────
+  if (['python', 'python3', 'ruby', 'node'].includes(baseCommand) && options.some(o => ['-c', '-e'].includes(o))) {
+    checkpoints.push('インラインで実行されるコードの内容を確認してください。');
+    checkpoints.push('ファイルの削除・書き換えや外部への通信が含まれていないか確認しましょう。');
+  }
+
+  // ── 権限変更 ───────────────────────────────────────────
+  if (baseCommand === 'chmod') {
+    checkpoints.push('「777」はすべての人が読み書き実行できる、最も緩い権限設定です。本当に必要ですか？');
+    if (options.includes('-R')) {
+      checkpoints.push('「-R」はフォルダ内のすべてのファイルに適用されます。対象フォルダが正しいか確認してください。');
+    }
+  }
+
+  // ── リモート接続 ──────────────────────────────────────
+  if (['ssh', 'scp'].includes(baseCommand)) {
+    checkpoints.push('接続先のサーバーアドレスは正しいですか？本番サーバーへの接続ではありませんか？');
+  }
+
+  // ── Docker ────────────────────────────────────────────
+  if (baseCommand === 'docker') {
+    if (subcommand === 'run') {
+      checkpoints.push('実行するDockerイメージは信頼できる公式イメージですか？');
+    }
+    if (subcommand === 'exec') {
+      checkpoints.push('本番環境で稼働中のコンテナに対して操作していませんか？');
+    }
+  }
+
+  // ── クラウド操作（AWS / GCP / Azure）─────────────────
+  if (['aws', 'gcloud', 'az'].includes(baseCommand)) {
+    checkpoints.push('操作対象の環境は本番（production）ではなく、開発・テスト環境ですか？');
+    checkpoints.push('削除・変更の操作の場合、バックアップや復元手段はありますか？');
+  }
+
+  // ── Kubernetes ────────────────────────────────────────
+  if (baseCommand === 'kubectl') {
+    checkpoints.push('現在接続しているクラスターを確認してください（kubectl config current-context）。本番環境ではありませんか？');
+    if (subcommand === 'delete') {
+      checkpoints.push('削除するリソース名を再確認してください。「--all」オプションがあるとすべてが削除されます。');
+    }
+  }
+
+  // ── Terraform ─────────────────────────────────────────
+  if (baseCommand === 'terraform') {
+    checkpoints.push('操作対象のインフラは本番環境ですか？');
+    if (subcommand === 'apply') {
+      checkpoints.push('「terraform plan」を先に実行して変更内容を確認しましたか？');
+    }
+    if (subcommand === 'destroy') {
+      checkpoints.push('これを実行するとすべてのサーバー・データベースが削除されます。本当に意図した操作ですか？');
+    }
+  }
+
+  // ── デプロイ系 ────────────────────────────────────────
+  if (['firebase', 'vercel', 'supabase'].includes(baseCommand) && subcommand === 'deploy') {
+    checkpoints.push('デプロイ先は本番環境（production）ですか？テスト環境への意図したデプロイですか？');
+  }
+
+  // ── macOS AppleScript ────────────────────────────────
+  if (baseCommand === 'osascript') {
+    checkpoints.push('AppleScriptはmacOS上でほぼ何でもできます。スクリプトの内容を確認しましたか？');
+    checkpoints.push('内容が不明な場合は必ず拒否し、Claude Codeに「このスクリプトは何をしますか？」と聞きましょう。');
+  }
+
+  // ── DD（ディスク破壊）────────────────────────────────
+  if (baseCommand === 'dd') {
+    checkpoints.push('「of=/dev/...」がついている場合、ディスクを直接上書きします。絶対に確認してから実行してください。');
+  }
+
+  // ── Redis flushall ────────────────────────────────────
+  if (baseCommand === 'redis-cli' && (subcommand === 'flushall' || subcommand === 'flushdb')) {
+    checkpoints.push('接続先のRedisは本番環境ですか？実行するとすべてのデータが消えます。');
+  }
+
+  // ── nc（ポート開放）──────────────────────────────────
+  if (['nc', 'netcat'].includes(baseCommand) && options.includes('-l')) {
+    checkpoints.push('外部からの接続を受け入れるポートを開きます。ポート番号と用途を把握していますか？');
+  }
+
+  // ── crontab -r ────────────────────────────────────────
+  if (baseCommand === 'crontab' && options.includes('-r')) {
+    checkpoints.push('「crontab -l」で現在登録されているタスクを確認しましたか？-r で全タスクが削除されます。');
+  }
+
+  // ── ファイル操作ツール（write / edit / read）─────────
+  if (baseCommand === 'write') {
+    checkpoints.push('上書きされるファイルに大切な内容がある場合は、事前にGitでバックアップしておくと安心です。');
+    checkpoints.push('設定ファイル（.envや.shなど）の場合は内容を特に慎重に確認してください。');
+  }
+  if (baseCommand === 'edit') {
+    checkpoints.push('変更される内容はClaude Codeに依頼した作業と一致していますか？');
+  }
+  if (baseCommand === 'read') {
+    checkpoints.push('読み取られるファイルに秘密鍵やAPIキーが含まれている場合、内容がAIに送信されます。問題ありませんか？');
+  }
+
+  // ── エッジケース警告からのヒント ─────────────────────
+  if (edgeWarnings.some(w => w.includes('コマンド置換'))) {
+    checkpoints.push('コマンドに「$(...)」が含まれています。実行時に別コマンドの結果が展開されます。内容を確認してください。');
+  }
+
+  // ── 全共通：判断に迷ったときのアドバイス ─────────────
+  let ifUnsure;
+  switch (riskLevel) {
+    case 'safe':
+      ifUnsure = '✅ 安全です。安心して許可してください。';
+      break;
+    case 'low':
+      ifUnsure = '✅ 通常の開発操作です。特に問題はありません。';
+      break;
+    case 'medium':
+      ifUnsure = 'Claude Codeに「今何をしようとしているか、日本語で説明してください」と聞いてから判断しましょう。';
+      break;
+    case 'high':
+      ifUnsure = '確信が持てない場合は拒否してください。Claude Codeに理由を確認してから改めて判断しましょう。拒否してもClaudeは別の方法を考えてくれます。';
+      break;
+    case 'critical':
+      ifUnsure = '少しでも不安があれば迷わず拒否してください。Claude Codeに「なぜこの操作が必要か説明してください」と聞き、納得してから許可しましょう。';
+      break;
+    default:
+      ifUnsure = '不明なコマンドです。Claude Codeに何をしようとしているか確認してから判断してください。';
+  }
+
+  return { checkpoints, ifUnsure };
+}
+
 // インライン実行系コマンド
 const INLINE_EXEC_COMMANDS = new Set(['bash', 'sh', 'zsh', 'fish', 'dash', 'python', 'python3', 'ruby', 'node', 'perl', 'php']);
 // 破壊的操作コマンド（$VARが混入すると危険度上昇）
@@ -425,7 +619,9 @@ function applyEdgeCasePolicies(parsed, result) {
     }
   }
 
-  if (warnings.length === 0) return { ...result, riskLevel };
+  const judgmentHints = buildJudgmentHints(baseCommand, subcommand, args, options, riskLevel, warnings);
+
+  if (warnings.length === 0) return { ...result, riskLevel, judgmentHints };
 
   // 警告をriskReasonに追記
   const existingReason = result.contextAnalysis.riskReason || '';
@@ -434,6 +630,7 @@ function applyEdgeCasePolicies(parsed, result) {
   return {
     ...result,
     riskLevel,
+    judgmentHints,
     contextAnalysis: {
       ...result.contextAnalysis,
       riskReason: newReason,
