@@ -80,6 +80,28 @@
     margin-right: 6px;
   }
   #status-dot.connected { background: var(--color-safe); }
+  #status-dot.paused    { background: #eab308; }
+
+  #pause-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px; height: 26px;
+    margin-left: 8px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 11px;
+    line-height: 1;
+    transition: background 0.15s, color 0.15s;
+  }
+  #pause-btn:hover { background: var(--border); color: var(--text); }
+  #pause-btn.paused { background: #fef9c3; border-color: #eab308; color: #a16207; }
+  @media (prefers-color-scheme: dark) {
+    #pause-btn.paused { background: #422006; border-color: #eab308; color: #fde047; }
+  }
 
   /* メインコンテンツ */
   #main { padding: 12px 14px; max-width: 640px; margin: 0 auto; }
@@ -293,7 +315,7 @@
 <body>
 
 <div id="header">
-  <h1><span id="status-dot"></span>🛡️ CodeGuard</h1>
+  <h1><span id="status-dot"></span>🛡️ CodeGuard<button id="pause-btn" onclick="togglePause()" title="監視を一時停止">⏸</button></h1>
   <div id="header-tabs">
     <button class="tab-btn active" onclick="switchTab('monitor')">監視</button>
     <button class="tab-btn" onclick="switchTab('history')">履歴</button>
@@ -380,6 +402,24 @@ const RISK_COLORS = {
 let ws = null;
 let history = [];
 let connected = false;
+let paused = false;
+
+function togglePause() {
+  paused = !paused;
+  const btn = document.getElementById('pause-btn');
+  const dot = document.getElementById('status-dot');
+  if (paused) {
+    btn.textContent = '▶';
+    btn.title = '監視を再開';
+    btn.classList.add('paused');
+    if (connected) dot.className = 'paused';
+  } else {
+    btn.textContent = '⏸';
+    btn.title = '監視を一時停止';
+    btn.classList.remove('paused');
+    if (connected) dot.className = 'connected';
+  }
+}
 
 // WebSocket接続
 function connect() {
@@ -396,12 +436,13 @@ function connect() {
 
   ws.onopen = () => {
     connected = true;
-    document.getElementById('status-dot').className = 'connected';
-    document.getElementById('settings-status').textContent = '接続中';
-    document.getElementById('settings-status').style.color = '#22c55e';
+    document.getElementById('status-dot').className = paused ? 'paused' : 'connected';
+    document.getElementById('settings-status').textContent = paused ? '一時停止中' : '接続中';
+    document.getElementById('settings-status').style.color = paused ? '#eab308' : '#22c55e';
   };
 
   ws.onmessage = (event) => {
+    if (paused) return;
     try {
       const data = JSON.parse(event.data);
       if (data.type === 'approval') {
