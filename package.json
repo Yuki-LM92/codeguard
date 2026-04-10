@@ -1,0 +1,24 @@
+{
+  "name": "codeguard",
+  "version": "1.0.0",
+  "description": "Claude Code承認リクエストを非エンジニアでも理解できるよう日本語解説するローカルデスクトップツール",
+  "main": "src/index.js",
+  "bin": {
+    "codeguard": "./bin/codeguard.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "keywords": ["claude-code", "claude", "assistant", "security"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "chokidar": "^3.6.0",
+    "express": "^4.18.2",
+    "ws": "^8.16.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

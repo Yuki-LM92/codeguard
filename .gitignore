@@ -1,0 +1,4 @@
+node_modules/
+~/.codeguard/
+*.log
+.DS_Store

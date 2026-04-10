@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeGuard 導入ガイド</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+    background: #f8fafc;
+    color: #1e293b;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  /* ヒーロー */
+  .hero {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: #f8fafc;
+    padding: 64px 24px;
+    text-align: center;
+  }
+  .hero-icon { font-size: 56px; margin-bottom: 16px; }
+  .hero h1 { font-size: 36px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.02em; }
+  .hero p { font-size: 18px; color: #94a3b8; max-width: 560px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 6px 16px;
+    border: 1px solid #334155;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #64748b;
+  }
+
+  /* コンテンツ */
+  .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+  section { padding: 56px 0; border-bottom: 1px solid #e2e8f0; }
+  section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #3b82f6;
+    margin-bottom: 8px;
+  }
+  h2 { font-size: 26px; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.01em; }
+  h3 { font-size: 17px; font-weight: 700; margin-bottom: 10px; margin-top: 28px; }
+  p { color: #475569; margin-bottom: 14px; }
+
+  /* カード */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 24px; }
+  .card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .card-icon { font-size: 28px; margin-bottom: 10px; }
+  .card h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .card p { font-size: 13px; color: #64748b; margin: 0; }
+
+  /* フロー図 */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 28px 0;
+    overflow-x: auto;
+    padding: 4px 0;
+  }
+  .flow-item {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 18px;
+    text-align: center;
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+  .flow-item .fi-icon { font-size: 22px; margin-bottom: 4px; }
+  .flow-item .fi-label { font-size: 12px; font-weight: 600; color: #1e293b; }
+  .flow-item .fi-sub { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+  .flow-arrow { font-size: 18px; color: #cbd5e1; padding: 0 8px; flex-shrink: 0; }
+  .flow-item.highlight { background: #eff6ff; border-color: #3b82f6; }
+  .flow-item.highlight .fi-label { color: #1d4ed8; }
+
+  /* 安全性 */
+  .safety-list { list-style: none; margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+  .safety-list li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .safety-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+  .safety-text strong { display: block; font-size: 14px; margin-bottom: 2px; }
+  .safety-text span { font-size: 13px; color: #64748b; }
+
+  /* ステップ */
+  .steps { margin-top: 24px; display: flex; flex-direction: column; gap: 20px; }
+  .step {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #1e293b;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-body { flex: 1; }
+  .step-body strong { display: block; font-size: 15px; margin-bottom: 6px; }
+  .step-body p { font-size: 13px; color: #64748b; margin: 0 0 8px; }
+
+  .code-block {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    font-size: 13px;
+    overflow-x: auto;
+    margin-top: 8px;
+  }
+  .code-block .comment { color: #64748b; }
+  .code-block .cmd { color: #7dd3fc; }
+
+  .tab-switcher { display: flex; gap: 8px; margin-bottom: 14px; }
+  .tab-os {
+    padding: 5px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #fff;
+    color: #64748b;
+  }
+  .tab-os.active { background: #1e293b; color: #fff; border-color: #1e293b; }
+  .os-content { display: none; }
+  .os-content.active { display: block; }
+
+  /* リスク表 */
+  .risk-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
+  .risk-table th {
+    background: #f1f5f9;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 12px;
+    color: #64748b;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  .risk-table td { padding: 10px 14px; border-bottom: 1px solid #f1f5f9; }
+  .risk-table tr:last-child td { border-bottom: none; }
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .badge-safe     { background: #dcfce7; color: #15803d; }
+  .badge-low      { background: #dbeafe; color: #1d4ed8; }
+  .badge-medium   { background: #fef9c3; color: #a16207; }
+  .badge-high     { background: #ffedd5; color: #c2410c; }
+  .badge-critical { background: #fee2e2; color: #b91c1c; }
+
+  /* 注意書き */
+  .note {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: #0369a1;
+    margin-top: 20px;
+  }
+
+  /* フッター */
+  footer {
+    background: #1e293b;
+    color: #64748b;
+    text-align: center;
+    padding: 32px 24px;
+    font-size: 13px;
+  }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 26px; }
+    .flow { flex-direction: column; align-items: flex-start; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ヒーロー -->
+<div class="hero">
+  <div class="hero-icon">🛡️</div>
+  <h1>CodeGuard</h1>
+  <p>AIが何をしようとしているか、日本語でリアルタイムに教えてくれるツール</p>
+  <div class="hero-badge">ローカル完結 · 外部通信ゼロ · 無料</div>
+</div>
+
+<div class="container">
+
+  <!-- なにこれ？ -->
+  <section>
+    <div class="section-label">About</div>
+    <h2>CodeGuardとは？</h2>
+    <p>
+      Claude Code（AIコーディングアシスタント）を使っていると、<br>
+      「このコマンドを実行してもいいですか？」という確認が頻繁に出てきます。
+    </p>
+    <p>
+      <strong>でも、コマンドの意味がわからなければ、判断できません。</strong><br>
+      CodeGuardはその瞬間に、コマンドの意味・影響・推奨アクションを<br>
+      日本語でわかりやすく表示してくれるツールです。
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h4>リアルタイム解説</h4>
+        <p>承認ダイアログが出た瞬間にブラウザに解説カードが表示されます</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🇯🇵</div>
+        <h4>完全日本語</h4>
+        <p>コマンド名・オプションの意味・推奨アクションをすべて日本語で表示</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔍</div>
+        <h4>手動でも調べられる</h4>
+        <p>気になるコマンドを入力するだけで即座に解説が出ます</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <h4>ブラウザで動く</h4>
+        <p>インストール後は普通のブラウザで表示されます。特別な操作不要</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 動作の仕組み -->
+  <section>
+    <div class="section-label">How it works</div>
+    <h2>どうやって動くの？</h2>
+    <p>Claude Codeが記録するログファイルを監視し、コマンドを検出して解説するだけです。<br>AIへの操作には一切干渉しません。</p>
+
+    <div class="flow">
+      <div class="flow-item">
+        <div class="fi-icon">🤖</div>
+        <div class="fi-label">Claude Code</div>
+        <div class="fi-sub">コマンドを提案</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item">
+        <div class="fi-icon">📄</div>
+        <div class="fi-label">ログファイル</div>
+        <div class="fi-sub">記録される</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item highlight">
+        <div class="fi-icon">🛡️</div>
+        <div class="fi-label">CodeGuard</div>
+        <div class="fi-sub">検出・解析</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item">
+        <div class="fi-icon">🌐</div>
+        <div class="fi-label">ブラウザ</div>
+        <div class="fi-sub">解説カード表示</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item">
+        <div class="fi-icon">👤</div>
+        <div class="fi-label">あなた</div>
+        <div class="fi-sub">判断する</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 安全性 -->
+  <section>
+    <div class="section-label">Security</div>
+    <h2>安全性について</h2>
+    <p>「インストールして大丈夫？」という疑問にお答えします。</p>
+
+    <ul class="safety-list">
+      <li>
+        <span class="safety-icon">🔒</span>
+        <div class="safety-text">
+          <strong>外部への通信はゼロです</strong>
+          <span>コマンドの解析はすべてあなたのPCの中だけで完結します。入力したコマンドや操作内容がインターネットに送られることは一切ありません。</span>
+        </div>
+      </li>
+      <li>
+        <span class="safety-icon">👁️</span>
+        <div class="safety-text">
+          <strong>Claude Codeの動作に干渉しません</strong>
+          <span>ログファイルを「読む」だけです。AIへの指示・コマンドの実行・ファイルの変更には一切関与しません。</span>
+        </div>
+      </li>
+      <li>
+        <span class="safety-icon">🏠</span>
+        <div class="safety-text">
+          <strong>ローカルホスト（127.0.0.1）のみで動作</strong>
+          <span>あなたのPC以外からはアクセスできません。同じWiFiに繋がっている他の端末からも見えません。</span>
+        </div>
+      </li>
+      <li>
+        <span class="safety-icon">📦</span>
+        <div class="safety-text">
+          <strong>使用しているライブラリは3つのみ</strong>
+          <span>chokidar（ファイル監視）・express（サーバー）・ws（通信）の3つだけです。すべてオープンソースで広く使われている実績あるライブラリです。</span>
+        </div>
+      </li>
+      <li>
+        <span class="safety-icon">🛡️</span>
+        <div class="safety-text">
+          <strong>セキュリティ検査済み</strong>
+          <span>依存パッケージの脆弱性ゼロ（npm audit確認済み）。セキュリティヘッダー・レート制限・入力長制限を実装しています。</span>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- 危険度レベル -->
+  <section>
+    <div class="section-label">Risk Levels</div>
+    <h2>危険度の見方</h2>
+    <p>CodeGuardはコマンドを5段階で評価します。色を見るだけで判断できます。</p>
+
+    <table class="risk-table">
+      <thead>
+        <tr>
+          <th>レベル</th>
+          <th>意味</th>
+          <th>推奨アクション</th>
+          <th>例</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-safe">🟢 安全</span></td>
+          <td>許可して問題ありません</td>
+          <td>✅ 許可</td>
+          <td>ls, pwd, git status</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-low">🔵 ほぼ安全</span></td>
+          <td>通常の開発操作です</td>
+          <td>✅ 許可</td>
+          <td>npm install, mkdir, git add</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-medium">🟡 注意</span></td>
+          <td>内容を確認してください</td>
+          <td>⚠️ 確認してから</td>
+          <td>ファイル作成, git commit</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-high">🟠 警告</span></td>
+          <td>影響範囲を理解した上で判断</td>
+          <td>⚠️ よく確認を</td>
+          <td>rm（ファイル削除）, git push</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-critical">🔴 危険</span></td>
+          <td>拒否を推奨します</td>
+          <td>🚫 基本は拒否</td>
+          <td>sudo, rm -rf ~/, chmod 777</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 導入手順 -->
+  <section>
+    <div class="section-label">Installation</div>
+    <h2>導入手順</h2>
+    <p>Node.js（v18以上）が必要です。Claude Codeを使っている方はすでにインストール済みです。</p>
+
+    <div class="tab-switcher">
+      <button class="tab-os active" onclick="switchOS('mac')">Mac</button>
+      <button class="tab-os" onclick="switchOS('win')">Windows</button>
+    </div>
+
+    <!-- Mac -->
+    <div id="os-mac" class="os-content active">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Node.jsのバージョンを確認</strong>
+            <p>ターミナルを開いて以下を実行してください。v18以上が表示されればOKです。</p>
+            <div class="code-block"><span class="cmd">node --version</span>
+<span class="comment"># v18.x.x 以上が表示されればOK</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>GitHubからダウンロード</strong>
+            <p>以下のコマンドでCodeGuardをダウンロードします。</p>
+            <div class="code-block"><span class="cmd">git clone https://github.com/Yuki-LM92/codeguard.git</span>
+<span class="cmd">cd codeguard</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>インストール</strong>
+            <p>1行のコマンドでインストール完了です。</p>
+            <div class="code-block"><span class="cmd">npm install -g .</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>起動する</strong>
+            <p>これだけです。ブラウザが自動で開きます。</p>
+            <div class="code-block"><span class="cmd">codeguard</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Windows -->
+    <div id="os-win" class="os-content">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Node.jsのバージョンを確認</strong>
+            <p>PowerShellを開いて以下を実行してください。</p>
+            <div class="code-block"><span class="cmd">node --version</span>
+<span class="comment"># v18.x.x 以上が表示されればOK</span>
+<span class="comment"># 表示されない場合は https://nodejs.org からインストール</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>GitHubからダウンロード</strong>
+            <div class="code-block"><span class="cmd">git clone https://github.com/Yuki-LM92/codeguard.git</span>
+<span class="cmd">cd codeguard</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>インストール</strong>
+            <div class="code-block"><span class="cmd">npm install -g .</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>起動する</strong>
+            <p>ブラウザが自動で開きます。</p>
+            <div class="code-block"><span class="cmd">codeguard</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      💡 <strong>起動するたびに</strong> <code>codeguard</code> と入力するだけです。<br>
+      Claude Codeと一緒に使うときは、両方を起動した状態にしておいてください。
+    </div>
+  </section>
+
+  <!-- アンインストール -->
+  <section>
+    <div class="section-label">Uninstall</div>
+    <h2>削除したいときは</h2>
+    <p>1行のコマンドで完全に削除できます。PCへの影響は残りません。</p>
+    <div class="code-block"><span class="cmd">npm uninstall -g codeguard</span></div>
+  </section>
+
+</div>
+
+<footer>
+  🛡️ CodeGuard &nbsp;·&nbsp; ローカル完結 · 外部通信ゼロ · 無料<br>
+  <span style="margin-top:6px; display:block">何か問題があれば気軽に連絡してください</span>
+</footer>
+
+<script>
+function switchOS(os) {
+  document.querySelectorAll('.tab-os').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.os-content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('os-' + os).classList.add('active');
+}
+</script>
+</body>
+</html>

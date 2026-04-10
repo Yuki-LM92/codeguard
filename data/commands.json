@@ -1,0 +1,455 @@
+{
+  "rm": {
+    "nameJa": "ファイル・フォルダの削除",
+    "category": "file",
+    "baseRisk": "high",
+    "description": "指定したファイルやフォルダを削除します。削除したファイルはゴミ箱に入らず、復元が困難です。",
+    "commonOptions": {
+      "-r": "フォルダの中身もすべて再帰的に削除します",
+      "-f": "確認メッセージを表示せず強制的に削除します",
+      "-i": "削除前に確認メッセージを表示します",
+      "-v": "削除したファイル名を表示します"
+    }
+  },
+  "mv": {
+    "nameJa": "ファイル・フォルダの移動/名前変更",
+    "category": "file",
+    "baseRisk": "medium",
+    "description": "ファイルやフォルダを別の場所に移動、または名前を変更します。",
+    "commonOptions": {
+      "-f": "上書き確認なしで強制移動",
+      "-i": "上書き前に確認",
+      "-v": "移動内容を表示"
+    }
+  },
+  "cp": {
+    "nameJa": "ファイル・フォルダのコピー",
+    "category": "file",
+    "baseRisk": "low",
+    "description": "ファイルやフォルダを複製します。元のファイルはそのまま残ります。",
+    "commonOptions": {
+      "-r": "フォルダの中身もすべて再帰的にコピー",
+      "-f": "上書き確認なしで強制コピー",
+      "-v": "コピー内容を表示"
+    }
+  },
+  "mkdir": {
+    "nameJa": "フォルダの新規作成",
+    "category": "file",
+    "baseRisk": "safe",
+    "description": "新しいフォルダを作成します。既存のファイルに影響はありません。",
+    "commonOptions": {
+      "-p": "必要な親フォルダもまとめて作成"
+    }
+  },
+  "rmdir": {
+    "nameJa": "空フォルダの削除",
+    "category": "file",
+    "baseRisk": "medium",
+    "description": "空のフォルダを削除します。中にファイルがある場合は削除できません。",
+    "commonOptions": {}
+  },
+  "touch": {
+    "nameJa": "空ファイルの作成/更新日時変更",
+    "category": "file",
+    "baseRisk": "safe",
+    "description": "空のファイルを新規作成するか、既存ファイルの更新日時を変更します。",
+    "commonOptions": {}
+  },
+  "chmod": {
+    "nameJa": "ファイルのアクセス権限変更",
+    "category": "permission",
+    "baseRisk": "high",
+    "description": "ファイルやフォルダの読み取り・書き込み・実行の権限を変更します。",
+    "commonOptions": {
+      "-R": "フォルダ内のすべてに再帰的に適用"
+    }
+  },
+  "chown": {
+    "nameJa": "ファイルの所有者変更",
+    "category": "permission",
+    "baseRisk": "high",
+    "description": "ファイルやフォルダの所有者を変更します。",
+    "commonOptions": {
+      "-R": "フォルダ内のすべてに再帰的に適用"
+    }
+  },
+  "ln": {
+    "nameJa": "リンク（ショートカット）の作成",
+    "category": "file",
+    "baseRisk": "low",
+    "description": "ファイルやフォルダへのリンク（ショートカットのようなもの）を作成します。",
+    "commonOptions": {
+      "-s": "シンボリックリンク（ショートカット）を作成"
+    }
+  },
+  "cat": {
+    "nameJa": "ファイルの内容を表示",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "ファイルの中身を画面に表示します。ファイルを変更しません。",
+    "commonOptions": {
+      "-n": "行番号を表示"
+    }
+  },
+  "head": {
+    "nameJa": "ファイルの先頭部分を表示",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "ファイルの先頭から数行を表示します。",
+    "commonOptions": {
+      "-n": "表示する行数を指定"
+    }
+  },
+  "tail": {
+    "nameJa": "ファイルの末尾部分を表示",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "ファイルの末尾から数行を表示します。",
+    "commonOptions": {
+      "-n": "表示する行数を指定",
+      "-f": "ファイルの追記をリアルタイムで監視"
+    }
+  },
+  "ls": {
+    "nameJa": "ファイル・フォルダの一覧表示",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "現在のフォルダ内のファイルとフォルダの一覧を表示します。",
+    "commonOptions": {
+      "-l": "詳細情報を表示",
+      "-a": "隠しファイルも表示",
+      "-h": "サイズを読みやすい形式で表示"
+    }
+  },
+  "pwd": {
+    "nameJa": "現在のフォルダ位置を表示",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "今いるフォルダのパス（場所）を表示します。",
+    "commonOptions": {}
+  },
+  "cd": {
+    "nameJa": "フォルダの移動",
+    "category": "navigation",
+    "baseRisk": "safe",
+    "description": "作業するフォルダを移動します。ファイルに影響はありません。",
+    "commonOptions": {}
+  },
+  "find": {
+    "nameJa": "ファイル・フォルダの検索",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "条件を指定してファイルやフォルダを検索します。",
+    "commonOptions": {
+      "-name": "ファイル名で検索",
+      "-type": "種類（ファイル/フォルダ）で絞込",
+      "-exec": "見つかったファイルに対してコマンドを実行（注意が必要）"
+    }
+  },
+  "grep": {
+    "nameJa": "テキスト検索",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "ファイルの中から指定した文字列を検索します。",
+    "commonOptions": {
+      "-r": "フォルダ内を再帰的に検索",
+      "-i": "大文字小文字を区別しない",
+      "-n": "行番号を表示",
+      "-l": "マッチしたファイル名のみ表示"
+    }
+  },
+  "sed": {
+    "nameJa": "テキストの置換・編集",
+    "category": "edit",
+    "baseRisk": "medium",
+    "description": "ファイル内の文字列を検索して置換します。-iオプションでファイルを直接変更します。",
+    "commonOptions": {
+      "-i": "ファイルを直接編集（元に戻せません）",
+      "-e": "編集コマンドを指定"
+    }
+  },
+  "awk": {
+    "nameJa": "テキストのパターン処理",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "テキストデータをパターンに基づいて処理・整形します。",
+    "commonOptions": {}
+  },
+  "echo": {
+    "nameJa": "テキストの出力",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "指定した文字列を画面に表示します。リダイレクトでファイルに書き込む場合もあります。",
+    "commonOptions": {
+      "-n": "末尾の改行を出力しない",
+      "-e": "エスケープ文字を解釈"
+    }
+  },
+  "curl": {
+    "nameJa": "URL先のデータ取得/送信",
+    "category": "network",
+    "baseRisk": "medium",
+    "description": "インターネット上のURLに対してデータの取得や送信を行います。",
+    "commonOptions": {
+      "-o": "ダウンロード先ファイルを指定",
+      "-X": "HTTPメソッドを指定（GET, POST等）",
+      "-H": "リクエストヘッダーを指定",
+      "-d": "送信するデータを指定",
+      "-L": "リダイレクトに追従",
+      "-s": "進捗を非表示"
+    }
+  },
+  "wget": {
+    "nameJa": "ファイルのダウンロード",
+    "category": "network",
+    "baseRisk": "medium",
+    "description": "インターネット上のファイルをダウンロードします。",
+    "commonOptions": {
+      "-O": "保存先ファイル名を指定",
+      "-q": "進捗を非表示"
+    }
+  },
+  "ssh": {
+    "nameJa": "リモートサーバーへの接続",
+    "category": "network",
+    "baseRisk": "high",
+    "description": "別のサーバーに安全な暗号化接続を行います。接続先での操作が可能になります。",
+    "commonOptions": {
+      "-i": "秘密鍵ファイルを指定",
+      "-p": "接続ポートを指定"
+    }
+  },
+  "scp": {
+    "nameJa": "リモートサーバーとのファイル転送",
+    "category": "network",
+    "baseRisk": "high",
+    "description": "ローカルとリモートサーバー間でファイルを転送します。",
+    "commonOptions": {
+      "-r": "フォルダごと転送"
+    }
+  },
+  "npm": {
+    "nameJa": "Node.jsパッケージ管理",
+    "category": "package",
+    "baseRisk": "low",
+    "description": "Node.js用のライブラリ（パッケージ）の管理を行います。",
+    "subcommands": {
+      "install": { "nameJa": "パッケージのインストール", "risk": "low", "description": "プロジェクトに必要なライブラリをインストールします" },
+      "uninstall": { "nameJa": "パッケージの削除", "risk": "low", "description": "インストール済みのライブラリを削除します" },
+      "run": { "nameJa": "スクリプトの実行", "risk": "medium", "description": "package.jsonに定義されたスクリプトを実行します。内容はプロジェクトにより異なります" },
+      "init": { "nameJa": "プロジェクトの初期化", "risk": "safe", "description": "新しいpackage.jsonファイルを作成します" },
+      "publish": { "nameJa": "パッケージの公開", "risk": "high", "description": "パッケージをnpmレジストリに公開します。社内コードの公開に注意" },
+      "audit": { "nameJa": "脆弱性チェック", "risk": "safe", "description": "インストール済みパッケージの脆弱性を確認します" }
+    }
+  },
+  "npx": {
+    "nameJa": "パッケージの一時実行",
+    "category": "package",
+    "baseRisk": "medium",
+    "description": "インストールせずにパッケージを一時的にダウンロードして実行します。実行内容はパッケージにより異なります。",
+    "commonOptions": {}
+  },
+  "yarn": {
+    "nameJa": "Node.jsパッケージ管理（Yarn）",
+    "category": "package",
+    "baseRisk": "low",
+    "description": "npmの代替パッケージ管理ツールです。",
+    "subcommands": {
+      "add": { "nameJa": "パッケージのインストール", "risk": "low", "description": "ライブラリをインストールします" },
+      "remove": { "nameJa": "パッケージの削除", "risk": "low", "description": "ライブラリを削除します" },
+      "run": { "nameJa": "スクリプトの実行", "risk": "medium", "description": "定義されたスクリプトを実行します" }
+    }
+  },
+  "pip": {
+    "nameJa": "Pythonパッケージ管理",
+    "category": "package",
+    "baseRisk": "low",
+    "description": "Python用のライブラリの管理を行います。",
+    "subcommands": {
+      "install": { "nameJa": "パッケージのインストール", "risk": "low", "description": "Pythonライブラリをインストールします" },
+      "uninstall": { "nameJa": "パッケージの削除", "risk": "low", "description": "Pythonライブラリを削除します" }
+    }
+  },
+  "git": {
+    "nameJa": "ソースコード管理（Git）",
+    "category": "vcs",
+    "baseRisk": "low",
+    "description": "ソースコードの変更履歴を管理するツールです。",
+    "subcommands": {
+      "status": { "nameJa": "変更状態の確認", "risk": "safe", "description": "変更されたファイルの一覧を表示します" },
+      "add": { "nameJa": "変更の記録準備", "risk": "safe", "description": "変更したファイルを記録対象に追加します" },
+      "commit": { "nameJa": "変更の記録", "risk": "low", "description": "変更内容をローカルに記録します。外部には影響しません" },
+      "push": { "nameJa": "変更の送信", "risk": "high", "description": "ローカルの記録をリモートサーバーに送信します。他のメンバーに影響します" },
+      "pull": { "nameJa": "最新の取得", "risk": "low", "description": "リモートサーバーから最新の変更を取得します" },
+      "clone": { "nameJa": "リポジトリの複製", "risk": "safe", "description": "リモートのプロジェクトをローカルにコピーします" },
+      "checkout": { "nameJa": "ブランチの切替", "risk": "low", "description": "作業するブランチ（開発の枝分かれ）を切り替えます" },
+      "branch": { "nameJa": "ブランチの管理", "risk": "low", "description": "ブランチの作成・一覧表示・削除を行います" },
+      "merge": { "nameJa": "ブランチの統合", "risk": "medium", "description": "別のブランチの変更を現在のブランチに取り込みます" },
+      "reset": { "nameJa": "変更の取り消し", "risk": "high", "description": "過去の状態に戻します。--hardオプションで変更が完全に失われます" },
+      "stash": { "nameJa": "変更の一時退避", "risk": "safe", "description": "作業中の変更を一時的に退避します" },
+      "log": { "nameJa": "履歴の表示", "risk": "safe", "description": "変更の履歴を表示します" },
+      "diff": { "nameJa": "差分の表示", "risk": "safe", "description": "変更内容の差分を表示します" },
+      "rebase": { "nameJa": "履歴の再構成", "risk": "high", "description": "コミット履歴を書き換えます。共有ブランチでの使用は危険です" },
+      "cherry-pick": { "nameJa": "特定の変更を取り込み", "risk": "medium", "description": "別ブランチの特定のコミットだけを取り込みます" }
+    }
+  },
+  "docker": {
+    "nameJa": "コンテナ管理（Docker）",
+    "category": "container",
+    "baseRisk": "medium",
+    "description": "アプリケーションの実行環境（コンテナ）を管理します。",
+    "subcommands": {
+      "build": { "nameJa": "イメージの構築", "risk": "low", "description": "コンテナの設計図（イメージ）を作成します" },
+      "run": { "nameJa": "コンテナの起動", "risk": "medium", "description": "コンテナを起動します。ポート公開やボリュームマウントに注意" },
+      "stop": { "nameJa": "コンテナの停止", "risk": "safe", "description": "動作中のコンテナを停止します" },
+      "rm": { "nameJa": "コンテナの削除", "risk": "medium", "description": "停止済みのコンテナを削除します" },
+      "ps": { "nameJa": "コンテナ一覧の表示", "risk": "safe", "description": "動作中のコンテナ一覧を表示します" },
+      "exec": { "nameJa": "コンテナ内でコマンド実行", "risk": "medium", "description": "動作中のコンテナ内でコマンドを実行します" }
+    }
+  },
+  "sudo": {
+    "nameJa": "管理者権限で実行",
+    "category": "system",
+    "baseRisk": "critical",
+    "description": "後に続くコマンドを管理者（root）権限で実行します。システム全体に影響を与える可能性があります。",
+    "commonOptions": {}
+  },
+  "kill": {
+    "nameJa": "プロセスの強制終了",
+    "category": "process",
+    "baseRisk": "medium",
+    "description": "実行中のプログラムを終了させます。",
+    "commonOptions": {
+      "-9": "強制的に即座に終了（正常終了を待たない）"
+    }
+  },
+  "ps": {
+    "nameJa": "実行中プロセスの一覧表示",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "現在実行中のプログラムの一覧を表示します。",
+    "commonOptions": {
+      "-a": "全ユーザーのプロセスを表示",
+      "-u": "詳細情報を表示",
+      "-x": "ターミナルに紐付かないプロセスも表示"
+    }
+  },
+  "env": {
+    "nameJa": "環境変数の表示",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "現在設定されている環境変数の一覧を表示します。",
+    "commonOptions": {}
+  },
+  "export": {
+    "nameJa": "環境変数の設定",
+    "category": "system",
+    "baseRisk": "low",
+    "description": "環境変数を設定します。現在のシェルセッション内でのみ有効です。",
+    "commonOptions": {}
+  },
+  "source": {
+    "nameJa": "スクリプトファイルの読み込み実行",
+    "category": "system",
+    "baseRisk": "medium",
+    "description": "指定したファイルの内容をコマンドとして実行します。",
+    "commonOptions": {}
+  },
+  "eval": {
+    "nameJa": "文字列をコマンドとして実行",
+    "category": "system",
+    "baseRisk": "critical",
+    "description": "文字列をシェルコマンドとして解釈・実行します。予期しないコマンドが実行される危険があります。",
+    "commonOptions": {}
+  },
+  "xargs": {
+    "nameJa": "入力からコマンドを構築して実行",
+    "category": "system",
+    "baseRisk": "medium",
+    "description": "標準入力から受け取ったデータを引数としてコマンドを実行します。",
+    "commonOptions": {}
+  },
+  "tar": {
+    "nameJa": "アーカイブの作成・展開",
+    "category": "file",
+    "baseRisk": "low",
+    "description": "複数のファイルを一つにまとめたり、まとめたファイルを展開します。",
+    "commonOptions": {
+      "-c": "アーカイブを作成",
+      "-x": "アーカイブを展開",
+      "-z": "gzip圧縮を使用",
+      "-f": "アーカイブファイル名を指定",
+      "-v": "処理内容を表示"
+    }
+  },
+  "unzip": {
+    "nameJa": "ZIPファイルの展開",
+    "category": "file",
+    "baseRisk": "low",
+    "description": "ZIP形式の圧縮ファイルを展開します。",
+    "commonOptions": {}
+  },
+  "wc": {
+    "nameJa": "行数・単語数・文字数のカウント",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "ファイルの行数、単語数、文字数を数えます。",
+    "commonOptions": {
+      "-l": "行数のみ表示",
+      "-w": "単語数のみ表示"
+    }
+  },
+  "sort": {
+    "nameJa": "テキストの並べ替え",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "テキストの行を並べ替えて表示します。",
+    "commonOptions": {}
+  },
+  "uniq": {
+    "nameJa": "重複行の除去",
+    "category": "read",
+    "baseRisk": "safe",
+    "description": "連続する重複行を除去して表示します。",
+    "commonOptions": {}
+  },
+  "tee": {
+    "nameJa": "出力の分岐（画面とファイル両方に出力）",
+    "category": "file",
+    "baseRisk": "low",
+    "description": "コマンドの出力を画面に表示しつつ、ファイルにも書き込みます。",
+    "commonOptions": {
+      "-a": "ファイルに追記（上書きしない）"
+    }
+  },
+  "python": {
+    "nameJa": "Pythonスクリプトの実行",
+    "category": "runtime",
+    "baseRisk": "medium",
+    "description": "Pythonプログラムを実行します。実行内容はスクリプトにより異なります。",
+    "commonOptions": {
+      "-m": "モジュールとして実行",
+      "-c": "コマンドラインでPythonコードを実行"
+    }
+  },
+  "python3": {
+    "nameJa": "Pythonスクリプトの実行（Python3）",
+    "category": "runtime",
+    "baseRisk": "medium",
+    "description": "Python3でプログラムを実行します。実行内容はスクリプトにより異なります。",
+    "commonOptions": {
+      "-m": "モジュールとして実行",
+      "-c": "コマンドラインでPythonコードを実行"
+    }
+  },
+  "node": {
+    "nameJa": "Node.jsスクリプトの実行",
+    "category": "runtime",
+    "baseRisk": "medium",
+    "description": "JavaScriptプログラムを実行します。実行内容はスクリプトにより異なります。",
+    "commonOptions": {
+      "-e": "コマンドラインでJavaScriptコードを実行"
+    }
+  }
+}
