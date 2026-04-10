@@ -451,5 +451,40 @@
     "commonOptions": {
       "-e": "コマンドラインでJavaScriptコードを実行"
     }
+  },
+  "gh": {
+    "nameJa": "GitHub操作（GitHub CLI）",
+    "category": "vcs",
+    "baseRisk": "medium",
+    "description": "GitHubのリポジトリ・PR・Issue・Releaseなどをコマンドラインから操作します。外部サービス（GitHub.com）に変更が反映されます。",
+    "subcommands": {
+      "repo create": { "nameJa": "リポジトリの作成", "risk": "high", "description": "GitHubにリポジトリを新規作成します。公開（public）設定の場合、誰でもアクセス可能になります" },
+      "repo delete": { "nameJa": "リポジトリの削除", "risk": "critical", "description": "GitHubのリポジトリを完全に削除します。元に戻せません" },
+      "repo clone": { "nameJa": "リポジトリの複製", "risk": "safe", "description": "GitHubのリポジトリをローカルにコピーします" },
+      "repo fork": { "nameJa": "リポジトリのフォーク", "risk": "low", "description": "他のユーザーのリポジトリを自分のアカウントにコピーします" },
+      "pr create": { "nameJa": "プルリクエストの作成", "risk": "medium", "description": "変更をメインブランチに取り込む申請（PR）をGitHubに送信します" },
+      "pr merge": { "nameJa": "プルリクエストのマージ", "risk": "high", "description": "PRをメインブランチに統合します。チームの共有コードに影響します" },
+      "pr close": { "nameJa": "プルリクエストのクローズ", "risk": "medium", "description": "プルリクエストを閉じます（マージせずに却下）" },
+      "issue create": { "nameJa": "Issueの作成", "risk": "low", "description": "GitHubにIssue（課題・報告）を作成します" },
+      "issue close": { "nameJa": "Issueのクローズ", "risk": "low", "description": "Issueを解決済みとして閉じます" },
+      "release create": { "nameJa": "リリースの公開", "risk": "high", "description": "GitHubにリリース（バージョン公開）を作成します。外部に公開されます" },
+      "workflow run": { "nameJa": "ワークフロー（CI/CD）の手動実行", "risk": "high", "description": "GitHub Actionsのワークフローを手動で起動します。デプロイなど重要な処理が実行される場合があります" },
+      "auth login": { "nameJa": "GitHubへのログイン", "risk": "medium", "description": "GitHub CLIでGitHubアカウントにログインします" },
+      "auth logout": { "nameJa": "GitHubからのログアウト", "risk": "medium", "description": "GitHub CLIのアカウント認証を解除します" },
+      "secret set": { "nameJa": "シークレット（機密情報）の設定", "risk": "high", "description": "GitHubリポジトリにシークレット（APIキー等）を登録します。登録内容はCIで参照されます" }
+    }
+  },
+  "brew": {
+    "nameJa": "パッケージ管理（Homebrew）",
+    "category": "package",
+    "baseRisk": "low",
+    "description": "macOS用パッケージマネージャーです。アプリやコマンドラインツールのインストール・管理を行います。",
+    "subcommands": {
+      "install": { "nameJa": "パッケージのインストール", "risk": "low", "description": "アプリやツールをインストールします" },
+      "uninstall": { "nameJa": "パッケージの削除", "risk": "low", "description": "インストール済みのパッケージを削除します" },
+      "update": { "nameJa": "パッケージ情報の更新", "risk": "safe", "description": "利用可能なパッケージの最新情報を取得します" },
+      "upgrade": { "nameJa": "パッケージのアップグレード", "risk": "low", "description": "インストール済みパッケージを最新バージョンに更新します" },
+      "cleanup": { "nameJa": "古いバージョンの削除", "risk": "low", "description": "古いバージョンのパッケージを削除してディスクを節約します" }
+    }
   }
 }
