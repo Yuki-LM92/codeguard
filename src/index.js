@@ -5,8 +5,9 @@ const fs = require('fs');
 const os = require('os');
 
 const { createHttpServer } = require('./httpServer');
-const { createWsServer } = require('./wsServer');
+const { createWsServer, broadcastSystem } = require('./wsServer');
 const { startWatcher } = require('./logWatcher');
+const { checkForUpdates } = require('./updateChecker');
 
 const DEFAULT_CONFIG = {
   port: 19280,
@@ -58,6 +59,10 @@ async function start(options = {}) {
 
   // ログ監視起動
   startWatcher(config.claudeProjectsPath);
+
+  // アップデートチェック（起動の邪魔をしないよう3秒後に非同期で実行）
+  const currentVersion = require('../package.json').version;
+  setTimeout(() => checkForUpdates(currentVersion, broadcastSystem), 3000);
 
   // ブラウザを開く
   if (options.open !== false) {

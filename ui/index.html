@@ -44,6 +44,43 @@
     min-height: 100vh;
   }
 
+  /* アップデート通知バナー */
+  #update-banner {
+    display: none;
+    background: #fef3c7;
+    border-bottom: 1px solid #f59e0b;
+    padding: 8px 16px;
+    font-size: 12px;
+    color: #92400e;
+    align-items: center;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 101;
+  }
+  #update-banner.visible { display: flex; }
+  #update-banner code {
+    background: #fde68a;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: monospace;
+    font-size: 11px;
+    cursor: pointer;
+    user-select: all;
+  }
+  #update-banner .close-btn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #92400e;
+    padding: 0 4px;
+    line-height: 1;
+    opacity: 0.6;
+  }
+  #update-banner .close-btn:hover { opacity: 1; }
+
   /* ヘッダー */
   #header {
     display: flex;
@@ -370,6 +407,15 @@
 </head>
 <body>
 
+<div id="update-banner">
+  <span>📦 新しいバージョンがあります：</span>
+  <span id="update-version-text"></span>
+  <span>→ codeguardフォルダで</span>
+  <code id="update-cmd" onclick="copyUpdateCmd(this)" title="クリックしてコピー">git pull</code>
+  <span>を実行してください</span>
+  <button class="close-btn" onclick="document.getElementById('update-banner').classList.remove('visible')" title="閉じる">×</button>
+</div>
+
 <div id="header">
   <h1><span id="status-dot"></span>🛡️ CodeGuard<button id="pause-btn" onclick="togglePause()" title="監視を一時停止">⏸</button></h1>
   <div id="header-tabs">
@@ -460,6 +506,22 @@ let history = [];
 let connected = false;
 let paused = false;
 
+function showUpdateBanner(payload) {
+  const { currentVersion, latestVersion, updateCommand } = payload;
+  document.getElementById('update-version-text').textContent =
+    `v${currentVersion} → v${latestVersion}`;
+  document.getElementById('update-cmd').textContent = updateCommand || 'git pull';
+  document.getElementById('update-banner').classList.add('visible');
+}
+
+function copyUpdateCmd(el) {
+  navigator.clipboard.writeText(el.textContent).then(() => {
+    const orig = el.textContent;
+    el.textContent = 'コピーしました！';
+    setTimeout(() => { el.textContent = orig; }, 1500);
+  });
+}
+
 function togglePause() {
   paused = !paused;
   const btn = document.getElementById('pause-btn');
@@ -505,6 +567,8 @@ function connect() {
         handleApprovalRequest(data.payload);
       } else if (data.type === 'warning') {
         showSystemWarning(data.message);
+      } else if (data.type === 'update_available') {
+        showUpdateBanner(data.payload);
       }
     } catch(e) {}
   };

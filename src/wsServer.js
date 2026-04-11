@@ -32,7 +32,16 @@ function createWsServer(config) {
  * @param {Object} payload - riskAnalyzer の出力
  */
 function broadcast(payload) {
-  const message = JSON.stringify({ type: 'approval', payload });
+  broadcastSystem('approval', payload);
+}
+
+/**
+ * 任意の type でブロードキャスト（システム通知・アップデート通知など）
+ * @param {string} type - メッセージタイプ
+ * @param {Object} payload - 送信データ
+ */
+function broadcastSystem(type, payload) {
+  const message = JSON.stringify({ type, payload });
   for (const client of clients) {
     try {
       if (client.readyState === 1 /* OPEN */) {
@@ -44,4 +53,4 @@ function broadcast(payload) {
   }
 }
 
-module.exports = { createWsServer, broadcast };
+module.exports = { createWsServer, broadcast, broadcastSystem };
