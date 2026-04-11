@@ -563,6 +563,9 @@ const INLINE_EXEC_COMMANDS = new Set(['bash', 'sh', 'zsh', 'fish', 'dash', 'pyth
 const DESTRUCTIVE_COMMANDS = new Set(['rm', 'chmod', 'chown', 'dd', 'shred', 'mv']);
 // システムパスへの書き込みは常に critical
 const SYSTEM_WRITE_PATHS = ['/etc/', '/usr/', '/bin/', '/sbin/', '/sys/', '/proc/', '/boot/', '/lib/', '/dev/'];
+// /dev/ 配下でも書き込みが安全な仮想デバイス（ゴミ箱・標準入出力）
+// 例: ls 2>/dev/null、command >/dev/null 2>&1 などは誤検知しない
+const DEV_SAFE_WRITE_TARGETS = new Set(['/dev/null', '/dev/stdin', '/dev/stdout', '/dev/stderr']);
 
 /**
  * エッジケースを検出し、リスク・説明を補強する
@@ -600,13 +603,20 @@ function applyEdgeCasePolicies(parsed, result) {
   }
 
   // ── ケース3: リダイレクト先がシステムパス ─────────────────────────────
+  // /dev/null, /dev/stdin, /dev/stdout, /dev/stderr への書き込みは安全（誤検知防止）
+  // それ以外の /dev/ (/dev/sda 等) と /etc/, /usr/ 等は危険
+  // overwrite (>) と append (>>) の両方を検査する（>> /etc/passwd も危険）
   if (redirects && redirects.length > 0) {
-    const dangerousRedirect = redirects.find(r =>
-      r.type === 'overwrite' && r.target && SYSTEM_WRITE_PATHS.some(p => r.target.startsWith(p))
-    );
+    const dangerousRedirect = redirects.find(r => {
+      if (!r.target) return false;
+      if (DEV_SAFE_WRITE_TARGETS.has(r.target)) return false; // /dev/null 等はセーフ
+      return (r.type === 'overwrite' || r.type === 'append') &&
+        SYSTEM_WRITE_PATHS.some(p => r.target.startsWith(p));
+    });
     if (dangerousRedirect) {
+      const opSymbol = dangerousRedirect.type === 'append' ? '>>' : '>';
       riskLevel = 'critical';
-      warnings.push(`🚫 システムファイルへの上書きリダイレクトです: > ${dangerousRedirect.target}`);
+      warnings.push(`🚫 システムファイルへの書き込みリダイレクトです: ${opSymbol} ${dangerousRedirect.target}`);
     }
   }
 

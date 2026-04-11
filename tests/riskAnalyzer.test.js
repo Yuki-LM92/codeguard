@@ -82,3 +82,40 @@ test('npm publish は high', () => {
   const r = analyzeCmd('npm publish');
   assert.equal(r.riskLevel, 'high');
 });
+
+// ── /dev/null 誤検知修正の確認 ────────────────────────────────────────────
+
+test('ls 2>/dev/null は safe（/dev/null への誤検知なし）', () => {
+  const r = analyzeCmd('ls /some/path 2>/dev/null');
+  assert.notEqual(r.riskLevel, 'critical', 'ls 2>/dev/null が critical になってはいけない');
+  assert.equal(r.contextAnalysis.recommendation, 'allow');
+});
+
+test('grep pattern file 2>/dev/null は safe（/dev/null への誤検知なし）', () => {
+  const r = analyzeCmd('grep -r "keyword" ./src 2>/dev/null');
+  assert.notEqual(r.riskLevel, 'critical', 'grep 2>/dev/null が critical になってはいけない');
+});
+
+test('command >/dev/null 2>&1 は safe（/dev/null への誤検知なし）', () => {
+  const r = analyzeCmd('npm run build >/dev/null 2>&1');
+  assert.notEqual(r.riskLevel, 'critical', '>/dev/null が critical になってはいけない');
+});
+
+// ── append リダイレクト検知追加の確認 ─────────────────────────────────────
+
+test('echo >> /etc/passwd は critical（appendリダイレクトも危険）', () => {
+  const r = analyzeCmd('echo "attacker:x:0:0" >> /etc/passwd');
+  assert.equal(r.riskLevel, 'critical', 'システムファイルへのappendは critical であるべき');
+});
+
+test('echo >> /etc/hosts は critical', () => {
+  const r = analyzeCmd('echo "127.0.0.1 evil.com" >> /etc/hosts');
+  assert.equal(r.riskLevel, 'critical');
+});
+
+// ── 既存の overwrite 検知が壊れていないことを確認 ──────────────────────────
+
+test('echo > /etc/passwd は critical（overwriteも引き続き危険）', () => {
+  const r = analyzeCmd('echo "" > /etc/passwd');
+  assert.equal(r.riskLevel, 'critical');
+});
