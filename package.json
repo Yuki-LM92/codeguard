@@ -1,7 +1,7 @@
 {
-  "name": "codeguard",
-  "version": "1.0.0",
-  "description": "Claude Code承認リクエストを非エンジニアでも理解できるよう日本語解説するローカルデスクトップツール",
+  "name": "@yuki-lm92/codeguard",
+  "version": "1.1.0",
+  "description": "Claude Codeが実行する操作をリアルタイムに日本語で解説し、リスクを色分け表示するローカル監視ツール",
   "main": "src/index.js",
   "bin": {
     "codeguard": "./bin/codeguard.js"
@@ -10,9 +10,35 @@
     "start": "node src/index.js",
     "test": "node --test tests/*.test.js"
   },
-  "keywords": ["claude-code", "claude", "assistant", "security"],
-  "author": "",
+  "files": [
+    "bin/",
+    "src/",
+    "data/",
+    "ui/",
+    "guide.html",
+    "README.md"
+  ],
+  "keywords": [
+    "claude-code",
+    "claude",
+    "assistant",
+    "security",
+    "monitoring",
+    "japanese"
+  ],
+  "author": "Yuki",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yuki-LM92/codeguard.git"
+  },
+  "homepage": "https://github.com/Yuki-LM92/codeguard#readme",
+  "bugs": {
+    "url": "https://github.com/Yuki-LM92/codeguard/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "chokidar": "^3.6.0",
     "express": "^4.18.2",

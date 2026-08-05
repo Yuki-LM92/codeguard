@@ -49,13 +49,16 @@ async function checkForUpdates(currentVersion, broadcastFn) {
     const latestVersion = await fetchLatestVersion();
 
     if (compareVersions(currentVersion, latestVersion) > 0) {
+      // npx 実行時は毎回最新が取得されるため、案内は「起動し直すだけ」で足りる
+      const updateCommand = 'npx github:Yuki-LM92/codeguard';
+
       console.log(`\n📦 CodeGuard の新しいバージョンがあります: v${currentVersion} → v${latestVersion}`);
-      console.log('   更新方法: git pull（codeguard フォルダで実行）\n');
+      console.log(`   更新方法: 一度終了して ${updateCommand} を実行し直してください\n`);
 
       broadcastFn('update_available', {
         currentVersion,
         latestVersion,
-        updateCommand: 'cd ~/ClaudeCode/codeguard && git pull'
+        updateCommand
       });
     }
   } catch (e) {
