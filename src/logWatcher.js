@@ -17,12 +17,57 @@ const lineBuffers = new Map();
 const WATCHED_TOOLS = new Set(['bash', 'write', 'edit', 'read', 'glob', 'Bash', 'Write', 'Edit', 'Read', 'Glob']);
 
 /**
+ * 監視対象ディレクトリの状態を調べる
+ * @param {string} watchPath - 監視ディレクトリ（~ 展開前）
+ * @returns {{resolved: string, exists: boolean, hasLogs: boolean}}
+ */
+function inspectWatchPath(watchPath) {
+  const resolved = watchPath.replace(/^~/, os.homedir());
+  let exists = false;
+  let hasLogs = false;
+
+  try {
+    exists = fs.statSync(resolved).isDirectory();
+  } catch (e) {
+    return { resolved, exists: false, hasLogs: false };
+  }
+
+  // .jsonl が1つでもあるか（浅く探索すれば十分）
+  try {
+    const stack = [resolved];
+    let depth = 0;
+    while (stack.length && depth < 500 && !hasLogs) {
+      const dir = stack.pop();
+      depth++;
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        if (entry.isFile() && entry.name.endsWith('.jsonl')) { hasLogs = true; break; }
+        if (entry.isDirectory()) stack.push(path.join(dir, entry.name));
+      }
+    }
+  } catch (e) {
+    // 読み取り権限がない場合などは hasLogs = false のまま
+  }
+
+  return { resolved, exists, hasLogs };
+}
+
+/**
  * ログ監視を開始する
  * @param {string} watchPath - 監視ディレクトリ
  * @returns {chokidar.FSWatcher}
  */
 function startWatcher(watchPath) {
   const resolved = watchPath.replace(/^~/, os.homedir());
+
+  // Claude Code をまだ使っていない環境ではディレクトリが存在しない。
+  // chokidar は存在しないパスを黙って無視するため、先に作って監視を成立させる。
+  if (!fs.existsSync(resolved)) {
+    try {
+      fs.mkdirSync(resolved, { recursive: true });
+    } catch (e) {
+      console.warn(`[CodeGuard] 監視ディレクトリを作成できませんでした: ${e.message}`);
+    }
+  }
 
   const watcher = chokidar.watch(resolved, {
     persistent: true,
@@ -35,6 +80,9 @@ function startWatcher(watchPath) {
     if (isJsonlFile(filePath)) {
       filePositions.set(filePath, 0);
       lineBuffers.set(filePath, '');
+      // Claude Code はセッション開始時に新しい .jsonl を作り、そこへ書き込む。
+      // add の時点で内容を読まないと、そのセッション最初の操作を取りこぼす。
+      readNewLines(filePath);
     }
   });
 
@@ -222,4 +270,4 @@ function handleToolUse(toolName, input) {
   broadcast(result);
 }
 
-module.exports = { startWatcher };
+module.exports = { startWatcher, inspectWatchPath };
