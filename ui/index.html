@@ -569,6 +569,8 @@ function connect() {
         showSystemWarning(data.message);
       } else if (data.type === 'update_available') {
         showUpdateBanner(data.payload);
+      } else if (data.type === 'waiting') {
+        showFirstRunGuide(data.payload);
       }
     } catch(e) {}
   };
@@ -598,6 +600,54 @@ function handleApprovalRequest(data) {
   if (data.riskLevel === 'critical' && document.getElementById('sound-enabled').checked) {
     playBeep();
   }
+}
+
+/**
+ * Claude Code の記録がまだ無い場合の初回ガイドを空状態に差し込む。
+ * 文言はUI側に固定で持つ（このUIは textContent で組む方針のため）。
+ */
+function showFirstRunGuide() {
+  const empty = document.getElementById('empty-state');
+  if (!empty) return; // 既に承認リクエストが表示されているなら何もしない
+
+  empty.innerHTML = '';
+
+  const icon = document.createElement('div');
+  icon.className = 'icon';
+  icon.textContent = '🌱';
+
+  const title = document.createElement('p');
+  title.style.fontWeight = '600';
+  title.textContent = 'Claude Codeの操作を待っています';
+
+  const box = document.createElement('div');
+  box.style.cssText = 'margin-top:16px; padding:12px; border-radius:8px; background:rgba(127,127,127,.08); text-align:left; line-height:1.9';
+
+  const head = document.createElement('div');
+  head.style.cssText = 'font-weight:600; margin-bottom:6px';
+  head.textContent = 'はじめての方へ';
+  box.appendChild(head);
+
+  for (const line of [
+    '1. この画面は開いたままにしておきます',
+    '2. 別のターミナルで Claude Code を使います',
+    '3. Claude が何か実行すると、ここに色付きで表示されます'
+  ]) {
+    const row = document.createElement('div');
+    row.textContent = line;
+    box.appendChild(row);
+  }
+
+  const legend = document.createElement('div');
+  legend.style.cssText = 'margin-top:8px; opacity:.75';
+  legend.textContent = '🟢 安全 → 🔵 低 → 🟡 注意 → 🟠 高 → 🔴 危険';
+  box.appendChild(legend);
+
+  const hint = document.createElement('p');
+  hint.style.cssText = 'margin-top:12px; opacity:.7';
+  hint.textContent = '下の入力欄にコマンドを打つと、今すぐ試せます';
+
+  empty.append(icon, title, box, hint);
 }
 
 function showCard(data, isNew = false) {

@@ -21,11 +21,17 @@ if (args.includes('--help') || args.includes('-h')) {
   codeguard [オプション]
 
 オプション:
-  --port <番号>      HTTPポート番号 (デフォルト: 19280)
-  --no-open          ブラウザを自動で開かない
-  --config <パス>    設定ファイルのパスを指定
-  --version, -v      バージョンを表示
-  --help, -h         このヘルプを表示
+  --port <番号>        HTTPポート番号 (デフォルト: 19280)
+  --no-open            ブラウザを自動で開かない
+  --no-update-check    起動時の更新確認を行わない
+  --config <パス>      設定ファイルのパスを指定
+  --version, -v        バージョンを表示
+  --help, -h           このヘルプを表示
+
+はじめての方へ:
+  1. このまま起動したままにしておきます
+  2. 別のターミナルで Claude Code を使います
+  3. Claude が実行した操作がブラウザに色分けで表示されます
 `);
   process.exit(0);
 }
@@ -39,6 +45,11 @@ if (portIdx !== -1 && args[portIdx + 1]) {
 // --no-open
 if (args.includes('--no-open')) {
   options.open = false;
+}
+
+// --no-update-check
+if (args.includes('--no-update-check')) {
+  options.checkForUpdates = false;
 }
 
 // --config

@@ -6,7 +6,7 @@ const os = require('os');
 
 const { createHttpServer } = require('./httpServer');
 const { createWsServer, broadcastSystem } = require('./wsServer');
-const { startWatcher } = require('./logWatcher');
+const { startWatcher, inspectWatchPath } = require('./logWatcher');
 const { checkForUpdates } = require('./updateChecker');
 
 const DEFAULT_CONFIG = {
@@ -18,7 +18,9 @@ const DEFAULT_CONFIG = {
   soundEnabled: true,
   soundOnlyLevel: 'critical',
   theme: 'auto',
-  maxHistory: 100
+  maxHistory: 100,
+  // 社内配布時など、GitHubへの更新確認を止めたい場合は false にする
+  checkForUpdates: true
 };
 
 function loadConfig(configPath) {
@@ -43,6 +45,10 @@ function loadConfig(configPath) {
 async function start(options = {}) {
   const config = loadConfig(options.config);
   if (options.port) config.port = parseInt(options.port, 10);
+  if (options.checkForUpdates === false) config.checkForUpdates = false;
+
+  // 監視先の状態を先に調べ、初回利用者に何が起きるか伝える
+  const watchState = inspectWatchPath(config.claudeProjectsPath);
 
   console.log('');
   console.log('🛡️  CodeGuard v' + require('../package.json').version);
@@ -50,6 +56,17 @@ async function start(options = {}) {
   console.log(`   監視: ${config.claudeProjectsPath}`);
   console.log('   Ctrl+C で終了');
   console.log('');
+
+  if (!watchState.hasLogs) {
+    console.log('   ────────────────────────────────────────────');
+    console.log('   まだClaude Codeの記録が見つかりません。');
+    console.log('');
+    console.log('   この画面を開いたまま、別のターミナルで');
+    console.log('   Claude Code を使ってみてください。');
+    console.log('   実行された操作がブラウザに表示されます。');
+    console.log('   ────────────────────────────────────────────');
+    console.log('');
+  }
 
   // WebSocketサーバー起動
   createWsServer(config);
@@ -60,9 +77,21 @@ async function start(options = {}) {
   // ログ監視起動
   startWatcher(config.claudeProjectsPath);
 
+  // 初回利用者向けの案内をUIにも送る（WS接続の確立を待つ）
+  if (!watchState.hasLogs) {
+    setTimeout(() => {
+      broadcastSystem('waiting', {
+        title: 'Claude Codeの操作を待っています',
+        message: 'このタブを開いたまま、Claude Codeを使ってみてください。実行された操作がここに表示されます。'
+      });
+    }, 1000);
+  }
+
   // アップデートチェック（起動の邪魔をしないよう3秒後に非同期で実行）
-  const currentVersion = require('../package.json').version;
-  setTimeout(() => checkForUpdates(currentVersion, broadcastSystem), 3000);
+  if (config.checkForUpdates !== false) {
+    const currentVersion = require('../package.json').version;
+    setTimeout(() => checkForUpdates(currentVersion, broadcastSystem), 3000);
+  }
 
   // ブラウザを開く
   if (options.open !== false) {
